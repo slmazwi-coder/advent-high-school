@@ -64,10 +64,11 @@ export const Home = () => {
           {stats.map((stat, i) => (
             <motion.div
               key={i}
-              initial= opacity: 0, y: 18 
-              whileInView= opacity: 1, y: 0 
-              viewport= once: true 
-              transition= duration: 0.35, delay: i * 0.06 
+              initial={{ opacity: 0, y: 18 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.35, delay: i * 0.06 }}
+
               className="bg-white p-8 rounded-2xl shadow-xl flex items-center gap-6 border-b-4 border-[#C8102E]"
             >
               <div className="p-4 bg-[#FFF5F7] rounded-xl text-[#C8102E]">

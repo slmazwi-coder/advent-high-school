@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { motion } from 'motion/react';
-import { Image as ImageIcon } from 'lucide-react';
 import { getAbout, type AboutInfo } from '../admin/utils/storage';
 
 export const About = () => {
@@ -22,10 +21,10 @@ export const About = () => {
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-stretch mb-16 sm:mb-24">
           <motion.div
-            initial={ { opacity: 0, y: 24 } }
-            whileInView={ { opacity: 1, y: 0 } }
-            transition={ { duration: 0.35 } }
-            viewport={ { once: true } }
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.35 }}
+            viewport={{ once: true }}
             className="flex flex-col justify-center"
           >
             <div className="border-l-4 border-[#C8102E] pl-5 mb-6">
@@ -39,15 +38,15 @@ export const About = () => {
           </motion.div>
 
           <motion.div
-            initial={ { opacity: 0, y: 24 } }
-            whileInView={ { opacity: 1, y: 0 } }
-            transition={ { duration: 0.35, delay: 0.05 } }
-            viewport={ { once: true } }
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.35, delay: 0.05 }}
+            viewport={{ once: true }}
             className="bg-[#F8FAFC] rounded-3xl overflow-hidden shadow-lg border border-gray-200"
           >
             <div className="bg-[#111827] p-6 sm:p-8">
-              <div className="w-full rounded-3xl bg-[#111827] p-2 sm:p-3" style={ { border: '4px solid #C8102E' } }>
-                <div className="w-full rounded-2xl overflow-hidden shadow-xl" style={ { aspectRatio: '4/3' } }>
+              <div className="w-full rounded-3xl bg-[#111827] p-2 sm:p-3" style={{ border: '4px solid #C8102E' }}>
+                <div className="w-full rounded-2xl overflow-hidden shadow-xl" style={{ aspectRatio: '4/3' }}>
                   {!campusFailed ? (
                     <img
                       src={campusImageUrl}
@@ -65,10 +64,10 @@ export const About = () => {
         </div>
 
         <motion.section
-          initial={ { opacity: 0, y: 24 } }
-          whileInView={ { opacity: 1, y: 0 } }
-          transition={ { duration: 0.4 } }
-          viewport={ { once: true } }
+          initial={{ opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4 }}
+          viewport={{ once: true }}
           className="mb-16 sm:mb-24"
         >
           <div className="text-center mb-10">
@@ -95,7 +94,7 @@ export const About = () => {
                 <h3 className="text-lg font-bold text-white text-center leading-tight">
                   {data.principalName}
                 </h3>
-                <p className="text-[#ffffff] text-sm font-semibold mt-1 text-center" style=opacity:0.85>
+                <p className="text-white text-sm font-semibold mt-1 text-center" style={{ opacity: 0.85 }}>
                   {data.principalTitle}
                 </p>
               </div>

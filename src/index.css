@@ -1,0 +1,59 @@
+@import "tailwindcss";
+
+@theme {
+  --color-school-red: #C8102E;
+  --color-school-deep-red: #7A0B1B;
+  --color-school-white: #ffffff;
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+}
+
+@layer base {
+  html, body, #root {
+    width: 100%;
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+  }
+
+  body {
+    @apply bg-[#F8FAFC] text-[#111827];
+  }
+
+  #root {
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+.glass-nav {
+  background: #ffffff;
+  border-bottom: 4px solid #C8102E;
+  @apply sticky top-0 z-50 w-full;
+}
+
+.btn-primary {
+  background: #C8102E;
+  color: #ffffff;
+  @apply px-6 py-2 font-semibold transition-colors;
+}
+.btn-primary:hover {
+  background: #7A0B1B;
+}
+
+.section-title {
+  @apply text-3xl font-bold mb-8 text-center;
+  color: #111827;
+}
+
+.card {
+  background: #ffffff;
+  border: 1px solid rgba(17, 24, 39, 0.08);
+  @apply p-6 shadow-sm hover:shadow-md transition-shadow;
+  border-radius: 0.75rem;
+}
+
+main {
+  width: 100%;
+  flex: 1;
+}

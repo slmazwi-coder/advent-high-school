@@ -2,98 +2,96 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Phone, Mail, MapPin, Facebook } from 'lucide-react';
 
-export const Footer = () => {
-  return (
-    <footer className="pt-12 pb-8 w-full" style={ { background: '#111827', borderTop: '4px solid #C8102E' } }>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+export const Footer = () => (
+  <footer style={{ background: '#111111', color: '#fff' }}>
+    <div className="container-narrow" style={{ padding: '3.5rem 1.25rem 2rem' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '2.5rem', marginBottom: '2.5rem' }}>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mb-10">
-
-          {/* Col 1 — Logo + Name + Socials */}
-          <div className="sm:col-span-2 lg:col-span-1">
-            <div className="flex items-center gap-3 mb-3">
-              <div className="h-12 w-12 shrink-0 rounded-xl overflow-hidden shadow-lg"
-                style={ { background: '#ffffff', border: '2px solid #C8102E' } }>
-                <img src="/logo.svg" alt="Advent Comprehensive High School logo"
-                  className="h-full w-full object-cover" />
-              </div>
-              <div>
-                <h3 className="text-base font-bold leading-tight" style={ { color: '#ffffff' } }>
-                  Advent Comprehensive High School
-                </h3>
-                <p className="text-sm italic mt-0.5" style={ { color: 'rgba(255,255,255,0.7)' } }>
-                  "The fear of the Lord is the beginning of wisdom"
-                </p>
+        {/* Brand */}
+        <div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1rem' }}>
+            <img src="/logo.svg" alt="ACHS" style={{ width: 40, height: 40, borderRadius: 8, border: '2px solid #B91C1C', background: '#fff' }} />
+            <div>
+              <div style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: '0.9rem', lineHeight: 1.2 }}>
+                Advent Comprehensive<br />High School
               </div>
             </div>
-
-            <div className="flex gap-3 mt-4">
-              <a href="#" target="_blank" rel="noreferrer"
-                className="p-2 rounded-full transition-colors"
-                style={ { background: 'rgba(200,16,46,0.15)', color: '#ffffff' } }
-                aria-label="Facebook">
-                <Facebook size={18} />
-              </a>
-            </div>
           </div>
-
-          {/* Col 2 — Contact */}
-          <div>
-            <h4 className="text-sm font-bold mb-4 pb-2 uppercase tracking-wide"
-              style={ { color: '#ffffff', borderBottom: '1px solid rgba(255,255,255,0.18)' } }>
-              Contact Us
-            </h4>
-            <ul className="space-y-3 text-sm" style={ { color: 'rgba(255,255,255,0.8)' } }>
-              <li className="flex items-start gap-2">
-                <MapPin className="shrink-0 mt-0.5" size={16} />
-                <span>505 Maluti, Matatiele, 4740 (Eastern Cape)</span>
-              </li>
-              <li className="flex items-center gap-2">
-                <Phone size={16} className="shrink-0" />
-                <span>072 300 0020 / 060 700 8052</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <Mail size={16} className="shrink-0 mt-0.5" />
-                <span className="break-all">adventhighschool90@gmail.com</span>
-              </li>
-            </ul>
-          </div>
-
-          {/* Col 3 — School Hours */}
-          <div>
-            <h4 className="text-sm font-bold mb-4 pb-2 uppercase tracking-wide"
-              style={ { color: '#ffffff', borderBottom: '1px solid rgba(255,255,255,0.18)' } }>
-              School Hours
-            </h4>
-            <ul className="space-y-2 text-sm" style={ { color: 'rgba(255,255,255,0.8)' } }>
-              <li className="flex justify-between gap-4">
-                <span>Mon – Thu</span>
-                <span className="font-medium">07:30 – 15:30</span>
-              </li>
-              <li className="flex justify-between gap-4">
-                <span>Friday</span>
-                <span className="font-medium">07:30 – 13:30</span>
-              </li>
-              <li className="flex justify-between gap-4">
-                <span>Sat – Sun</span>
-                <span className="font-medium">Closed</span>
-              </li>
-            </ul>
-          </div>
-        </div>
-
-        {/* Bottom bar */}
-        <div className="pt-6 text-center text-xs" style={ { borderTop: '1px solid rgba(255,255,255,0.12)', color: 'rgba(255,255,255,0.55)' } }>
-          <p>© {new Date().getFullYear()} Advent Comprehensive High School. All Rights Reserved.</p>
-          <Link to="/admin/login"
-            className="text-xs mt-2 inline-block transition-colors hover:opacity-80"
-            style={ { color: 'rgba(255,255,255,0.35)' } }
+          <p style={{ fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: '0.82rem', color: 'rgba(255,255,255,0.45)', lineHeight: 1.6, margin: '0 0 1rem' }}>
+            "The fear of the Lord is the beginning of wisdom"
+          </p>
+          <a href="https://facebook.com" target="_blank" rel="noreferrer"
+            style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: 34, height: 34, borderRadius: '50%', background: 'rgba(255,255,255,0.08)', color: '#fff', textDecoration: 'none', transition: 'background 0.15s' }}
+            aria-label="Facebook"
           >
-            Staff Portal
-          </Link>
+            <Facebook size={16} />
+          </a>
         </div>
 
+        {/* Quick Links */}
+        <div>
+          <h4 style={{ fontFamily: 'var(--font-body)', fontSize: '0.7rem', fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.4)', marginBottom: '1rem' }}>
+            Quick Links
+          </h4>
+          {[
+            { label: 'About Us', to: '/about' },
+            { label: 'Admissions', to: '/admissions' },
+            { label: 'Boarding', to: '/boarding' },
+            { label: 'Contact', to: '/contact' },
+            { label: 'Student Portal', to: '/student/login' },
+            { label: 'Staff Portal', to: '/admin/login' },
+          ].map(l => (
+            <Link key={l.to} to={l.to} style={{ display: 'block', color: 'rgba(255,255,255,0.6)', fontSize: '0.85rem', textDecoration: 'none', marginBottom: '0.5rem', transition: 'color 0.15s' }}
+              onMouseEnter={e => (e.currentTarget.style.color = '#fff')}
+              onMouseLeave={e => (e.currentTarget.style.color = 'rgba(255,255,255,0.6)')}
+            >
+              {l.label}
+            </Link>
+          ))}
+        </div>
+
+        {/* Contact */}
+        <div>
+          <h4 style={{ fontFamily: 'var(--font-body)', fontSize: '0.7rem', fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.4)', marginBottom: '1rem' }}>
+            Contact
+          </h4>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
+            {[
+              { icon: MapPin, text: '505 Maluti, Matatiele, 4740' },
+              { icon: Phone, text: '072 300 0020 / 060 700 8052' },
+              { icon: Mail, text: 'adventhighschool90@gmail.com' },
+            ].map(({ icon: Icon, text }) => (
+              <div key={text} style={{ display: 'flex', alignItems: 'flex-start', gap: '0.6rem', color: 'rgba(255,255,255,0.6)', fontSize: '0.85rem' }}>
+                <Icon size={14} style={{ color: '#B91C1C', flexShrink: 0, marginTop: 3 }} />
+                <span>{text}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Hours */}
+        <div>
+          <h4 style={{ fontFamily: 'var(--font-body)', fontSize: '0.7rem', fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.4)', marginBottom: '1rem' }}>
+            School Hours
+          </h4>
+          {[
+            { day: 'Mon – Thu', hours: '07:30 – 15:30' },
+            { day: 'Friday', hours: '07:30 – 13:30' },
+            { day: 'Weekend', hours: 'Closed' },
+          ].map(r => (
+            <div key={r.day} style={{ display: 'flex', justifyContent: 'space-between', gap: '1rem', marginBottom: '0.5rem', fontSize: '0.85rem', color: 'rgba(255,255,255,0.6)' }}>
+              <span>{r.day}</span>
+              <span style={{ fontWeight: 500, color: 'rgba(255,255,255,0.85)' }}>{r.hours}</span>
+            </div>
+          ))}
+        </div>
       </div>
-    </footer>
-  );
-};
+
+      <div style={{ borderTop: '1px solid rgba(255,255,255,0.08)', paddingTop: '1.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <p style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.3)', margin: 0 }}>
+          © {new Date().getFullYear()} Advent Comprehensive High School · Matatiele, Eastern Cape
+        </p>
+      </div>
+    </div>
+  </footer>
+);

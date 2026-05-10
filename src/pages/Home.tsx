@@ -1,96 +1,106 @@
 import React from 'react';
-import { motion } from 'motion/react';
-import { BookOpen, Users, Megaphone, ArrowRight } from 'lucide-react';
+import { ArrowRight, BookOpen, Users, Award, Phone } from 'lucide-react';
 
 const stats = [
-  { label: 'Grades', value: '8–12', icon: BookOpen },
-  { label: 'Matric Rewrite', value: 'Available', icon: Users },
-  { label: 'Admissions', value: '2026 Open', icon: Megaphone },
+  { value: 'Gr 8–12', label: 'Grades Offered', icon: BookOpen },
+  { value: 'Available', label: 'Matric Rewrite', icon: Award },
+  { value: '2026', label: 'Admissions Open', icon: Users },
 ];
 
-export const Home = () => {
-  return (
-    <div className="flex flex-col">
-      <section className="py-10 sm:py-12 bg-white">
-        <div className="mx-auto max-w-7xl w-full px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-            <div className="rounded-3xl border border-[#C8102E] bg-[#FFF5F7] p-6 sm:p-7 flex gap-4 items-start">
-              <div className="p-3 rounded-2xl bg-white border border-[#C8102E] text-[#C8102E] shrink-0">
-                <Megaphone size={22} />
-              </div>
-              <div className="min-w-0">
-                <div className="flex flex-wrap items-center gap-2">
-                  <div className="text-sm font-black uppercase tracking-widest text-[#111827]">Notice</div>
-                  <span className="px-2 py-1 rounded-full text-xs font-bold bg-white border border-[#C8102E] text-gray-700">
-                    2026
-                  </span>
-                </div>
-                <h3 className="text-xl font-extrabold text-gray-900 mt-2">Admissions are still open</h3>
-                <p className="text-gray-700 mt-1">
-                  Applications for the <span className="font-bold">2026</span> academic year are still open.
-                </p>
-                <a href="/admissions" className="mt-4 inline-flex items-center gap-2 text-[#C8102E] font-bold">
-                  Enroll now <ArrowRight size={18} />
-                </a>
-              </div>
-            </div>
+export const Home = () => (
+  <div>
+    {/* Stats strip */}
+    <section style={{ background: '#B91C1C' }}>
+      <div className="container-narrow" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)' }}>
+        {stats.map((s, i) => (
+          <div key={i} style={{
+            padding: '1.5rem 1rem',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            textAlign: 'center',
+            borderRight: i < stats.length - 1 ? '1px solid rgba(255,255,255,0.15)' : 'none',
+          }}>
+            <s.icon size={22} style={{ color: 'rgba(255,255,255,0.7)', marginBottom: '0.5rem' }} />
+            <div style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 'clamp(1rem, 3vw, 1.4rem)', color: '#fff' }}>{s.value}</div>
+            <div style={{ fontFamily: 'var(--font-body)', fontSize: '0.72rem', color: 'rgba(255,255,255,0.65)', textTransform: 'uppercase', letterSpacing: '0.06em', marginTop: '0.2rem' }}>{s.label}</div>
+          </div>
+        ))}
+      </div>
+    </section>
 
-            <div className="rounded-3xl border border-gray-200 bg-gray-50 p-6 sm:p-7 flex gap-4 items-start">
-              <div className="p-3 rounded-2xl bg-white border border-gray-200 text-[#C8102E] shrink-0">
-                <Megaphone size={22} />
-              </div>
-              <div className="min-w-0">
-                <div className="flex flex-wrap items-center gap-2">
-                  <div className="text-sm font-black uppercase tracking-widest text-[#111827]">Matric Rewrite</div>
-                  <span className="px-2 py-1 rounded-full text-xs font-bold bg-white border border-gray-200 text-gray-700">
-                    Available
-                  </span>
-                </div>
-                <h3 className="text-xl font-extrabold text-gray-900 mt-2">Matric rewrite is offered</h3>
-                <p className="text-gray-700 mt-1">
-                  Contact the school for matric rewrite requirements and registration.
-                </p>
-                <a href="/contact" className="mt-4 inline-flex items-center gap-2 text-[#C8102E] font-bold">
-                  Contact us <ArrowRight size={18} />
+    {/* Welcome */}
+    <section className="section-pad" style={{ background: '#FAFAF8' }}>
+      <div className="container-narrow">
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 340px), 1fr))', gap: '3rem', alignItems: 'center' }}>
+          <div className="fade-up">
+            <div className="rule-accent" />
+            <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(1.6rem, 4vw, 2.4rem)', margin: '0 0 1rem', color: '#111' }}>
+              A School Built on Faith & Excellence
+            </h2>
+            <p style={{ color: '#555', lineHeight: 1.8, marginBottom: '1rem', fontSize: '0.95rem' }}>
+              Advent Comprehensive High School is an independent co-educational school in Maluti, Matatiele. We offer Grade 8 to Grade 12 and matric rewrite, nurturing learners in a disciplined, faith-centred environment.
+            </p>
+            <p style={{ color: '#555', lineHeight: 1.8, marginBottom: '1.75rem', fontSize: '0.95rem' }}>
+              Our mission is to develop the whole person — academically, spiritually, and socially — so that every learner leaves equipped for a successful future.
+            </p>
+            <a href="/about" className="btn btn-ghost">
+              Learn More <ArrowRight size={15} />
+            </a>
+          </div>
+
+          {/* Info cards */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }} className="fade-up delay-2">
+            {[
+              { title: 'Admissions 2026 Still Open', body: 'Grade 8–12 and matric rewrite applications are open. Contact us to secure your place.', cta: 'Apply now', href: '/admissions' },
+              { title: 'Boarding Available', body: 'We offer boarding facilities for learners from outside Matatiele. Contact us for availability.', cta: 'Learn more', href: '/boarding' },
+            ].map(card => (
+              <div key={card.title} className="card" style={{ borderLeft: '3px solid #B91C1C' }}>
+                <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '1.05rem', fontWeight: 700, margin: '0 0 0.4rem', color: '#111' }}>{card.title}</h3>
+                <p style={{ fontSize: '0.85rem', color: '#666', margin: '0 0 0.75rem', lineHeight: 1.6 }}>{card.body}</p>
+                <a href={card.href} style={{ fontSize: '0.82rem', fontWeight: 600, color: '#B91C1C', display: 'inline-flex', alignItems: 'center', gap: '4px', textDecoration: 'none' }}>
+                  {card.cta} <ArrowRight size={13} />
                 </a>
               </div>
-            </div>
+            ))}
           </div>
         </div>
-      </section>
+      </div>
+    </section>
 
-      <section className="py-12 bg-gray-50 -mt-4 mx-auto max-w-7xl w-full px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {stats.map((stat, i) => (
-            <motion.div
-              key={i}
-              initial={{ opacity: 0, y: 18 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.35, delay: i * 0.06 }}
+    {/* Motto banner */}
+    <section style={{ background: '#111111', padding: '4rem 1.25rem', textAlign: 'center' }}>
+      <div className="container-narrow" style={{ maxWidth: '600px' }}>
+        <div className="rule-accent" style={{ margin: '0 auto 1.25rem' }} />
+        <blockquote style={{ fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: 'clamp(1.2rem, 3vw, 1.75rem)', color: '#fff', margin: 0, lineHeight: 1.5 }}>
+          "The fear of the Lord is the beginning of wisdom"
+        </blockquote>
+        <p style={{ marginTop: '1rem', color: 'rgba(255,255,255,0.4)', fontSize: '0.8rem', letterSpacing: '0.1em', textTransform: 'uppercase' }}>
+          School Motto
+        </p>
+      </div>
+    </section>
 
-              className="bg-white p-8 rounded-2xl shadow-xl flex items-center gap-6 border-b-4 border-[#C8102E]"
-            >
-              <div className="p-4 bg-[#FFF5F7] rounded-xl text-[#C8102E]">
-                <stat.icon size={32} />
-              </div>
-              <div>
-                <p className="text-3xl font-bold text-gray-900">{stat.value}</p>
-                <p className="text-gray-500 font-medium">{stat.label}</p>
-              </div>
-            </motion.div>
-          ))}
-        </div>
-      </section>
-
-      <section className="py-24 bg-white">
-        <div className="max-w-4xl mx-auto px-4 text-center">
-          <h2 className="section-title">Our Motto</h2>
-          <p className="text-2xl text-gray-700 leading-relaxed font-light italic">
-            "The fear of the Lord is the beginning of wisdom"
+    {/* Contact CTA */}
+    <section className="section-pad" style={{ background: '#FAFAF8' }}>
+      <div className="container-narrow" style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: '1.5rem' }}>
+        <div>
+          <h3 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(1.2rem, 3vw, 1.6rem)', margin: '0 0 0.4rem', color: '#111' }}>
+            Have questions?
+          </h3>
+          <p style={{ color: '#666', margin: 0, fontSize: '0.9rem' }}>
+            We're happy to help with admissions, fees, or anything else.
           </p>
         </div>
-      </section>
-    </div>
-  );
-};
+        <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
+          <a href="tel:0723000020" className="btn btn-primary">
+            <Phone size={15} /> Call Us
+          </a>
+          <a href="/contact" className="btn btn-ghost">
+            Contact Page <ArrowRight size={15} />
+          </a>
+        </div>
+      </div>
+    </section>
+  </div>
+);

@@ -17,8 +17,6 @@ import { Boarding } from './pages/Boarding';
 import { Contact } from './pages/Contact';
 import { StudentLogin } from './pages/StudentLogin';
 import { StudentPortal } from './pages/StudentPortal';
-
-// Admin imports
 import { AdminLogin } from './admin/AdminLogin';
 import { AdminLayout } from './admin/AdminLayout';
 import { AdminDashboard } from './admin/Dashboard';
@@ -32,6 +30,14 @@ import { ApplicationsEditor } from './admin/editors/ApplicationsEditor';
 import { ContactEditor } from './admin/editors/ContactEditor';
 import { StudentDocsEditor } from './admin/editors/StudentDocsEditor';
 
+const PublicPage = ({ children }: { children: React.ReactNode }) => (
+  <>
+    <Navbar />
+    <main style={{ flex: 1 }}>{children}</main>
+    <Footer />
+  </>
+);
+
 const HomePage = () => (
   <>
     <Hero />
@@ -40,35 +46,22 @@ const HomePage = () => (
   </>
 );
 
-const PageShell = ({ children }: { children: React.ReactNode }) => (
-  <>
-    <Navbar />
-    <main className="flex-grow">{children}</main>
-    <Footer />
-  </>
-);
-
 export default function App() {
   return (
     <Router>
       <Routes>
-        {/* Public routes */}
-        <Route path="/" element={<PageShell><HomePage /></PageShell>} />
-        <Route path="/about" element={<PageShell><About /></PageShell>} />
-        <Route path="/staff" element={<PageShell><Staff /></PageShell>} />
-        <Route path="/documents" element={<PageShell><Documents /></PageShell>} />
-        <Route path="/achievements" element={<PageShell><Achievements /></PageShell>} />
-        <Route path="/sport" element={<PageShell><Sport /></PageShell>} />
-        <Route path="/activities" element={<PageShell><Activities /></PageShell>} />
-        <Route path="/admissions" element={<PageShell><Admissions /></PageShell>} />
-        <Route path="/boarding" element={<PageShell><Boarding /></PageShell>} />
-        <Route path="/contact" element={<PageShell><Contact /></PageShell>} />
-
-        {/* Student portal routes */}
+        <Route path="/" element={<PublicPage><HomePage /></PublicPage>} />
+        <Route path="/about" element={<PublicPage><About /></PublicPage>} />
+        <Route path="/staff" element={<PublicPage><Staff /></PublicPage>} />
+        <Route path="/documents" element={<PublicPage><Documents /></PublicPage>} />
+        <Route path="/achievements" element={<PublicPage><Achievements /></PublicPage>} />
+        <Route path="/sport" element={<PublicPage><Sport /></PublicPage>} />
+        <Route path="/activities" element={<PublicPage><Activities /></PublicPage>} />
+        <Route path="/admissions" element={<PublicPage><Admissions /></PublicPage>} />
+        <Route path="/boarding" element={<PublicPage><Boarding /></PublicPage>} />
+        <Route path="/contact" element={<PublicPage><Contact /></PublicPage>} />
         <Route path="/student/login" element={<StudentLogin />} />
         <Route path="/student" element={<StudentPortal />} />
-
-        {/* Admin routes */}
         <Route path="/admin/login" element={<AdminLogin />} />
         <Route path="/admin" element={<ProtectedRoute><AdminLayout /></ProtectedRoute>}>
           <Route index element={<AdminDashboard />} />
@@ -82,7 +75,6 @@ export default function App() {
           <Route path="contact" element={<ContactEditor />} />
         </Route>
       </Routes>
-
       <ChatbotWidget />
     </Router>
   );

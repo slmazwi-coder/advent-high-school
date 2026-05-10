@@ -31,11 +31,11 @@ export const Admissions = () => (
               To begin the application process, contact the school directly by phone or email and our admissions team will guide you through the next steps.
             </p>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-              <a href="tel:0723000020" className="btn btn-primary" style={{ width: 'fit-content' }}>
-                <Phone size={15} /> Call to Apply
+              <a href="/applications" className="btn btn-primary" style={{ width: 'fit-content' }}>
+                <ArrowRight size={15} /> Apply Online
               </a>
-              <a href="mailto:adventhighschool90@gmail.com" className="btn btn-ghost" style={{ width: 'fit-content' }}>
-                <Mail size={15} /> Email Us
+              <a href="tel:0723000020" className="btn btn-ghost" style={{ width: 'fit-content' }}>
+                <Phone size={15} /> Call Us
               </a>
             </div>
           </div>

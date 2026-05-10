@@ -13,7 +13,9 @@ import { Achievements } from './pages/Achievements';
 import { Sport } from './pages/Sport';
 import { Activities } from './pages/Activities';
 import { Admissions } from './pages/Admissions';
+import { Applications } from './pages/Applications';
 import { Boarding } from './pages/Boarding';
+import { Merchandise } from './pages/Merchandise';
 import { Contact } from './pages/Contact';
 import { StudentLogin } from './pages/StudentLogin';
 import { StudentPortal } from './pages/StudentPortal';
@@ -58,7 +60,9 @@ export default function App() {
         <Route path="/sport" element={<PublicPage><Sport /></PublicPage>} />
         <Route path="/activities" element={<PublicPage><Activities /></PublicPage>} />
         <Route path="/admissions" element={<PublicPage><Admissions /></PublicPage>} />
+        <Route path="/applications" element={<PublicPage><Applications /></PublicPage>} />
         <Route path="/boarding" element={<PublicPage><Boarding /></PublicPage>} />
+        <Route path="/merchandise" element={<PublicPage><Merchandise /></PublicPage>} />
         <Route path="/contact" element={<PublicPage><Contact /></PublicPage>} />
         <Route path="/student/login" element={<StudentLogin />} />
         <Route path="/student" element={<StudentPortal />} />

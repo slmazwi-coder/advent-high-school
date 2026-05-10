@@ -52,7 +52,7 @@ export const Home = () => (
           {/* Info cards */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }} className="fade-up delay-2">
             {[
-              { title: 'Admissions 2026 Still Open', body: 'Grade 8–12 and matric rewrite applications are open. Contact us to secure your place.', cta: 'Apply now', href: '/admissions' },
+              { title: 'Admissions 2026 Still Open', body: 'Grade 8–12 and matric rewrite applications are open. Apply online to secure your place.', cta: 'Apply now', href: '/applications' },
               { title: 'Boarding Available', body: 'We offer boarding facilities for learners from outside Matatiele. Contact us for availability.', cta: 'Learn more', href: '/boarding' },
             ].map(card => (
               <div key={card.title} className="card" style={{ borderLeft: '3px solid #B91C1C' }}>

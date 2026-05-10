@@ -2,18 +2,9 @@ import React from 'react';
 import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { logout } from './utils/storage';
 import {
-  Newspaper,
-  Info,
-  Trophy,
-  FileText,
-  Activity,
-  Users,
-  Phone,
-  LogOut,
-  LayoutDashboard,
-  ShieldCheck,
-  ArrowLeft,
-  FolderUp,
+  Newspaper, Info, Trophy, FileText, Activity, Users,
+  Phone, LogOut, LayoutDashboard, ShieldCheck, ArrowLeft,
+  FolderUp, Image,
 } from 'lucide-react';
 
 const adminTabs = [
@@ -26,100 +17,66 @@ const adminTabs = [
   { path: '/admin/applications', label: 'Applications', icon: Users },
   { path: '/admin/student-documents', label: 'Student Docs', icon: FolderUp },
   { path: '/admin/contact', label: 'Contact', icon: Phone },
+  { path: '/admin/media', label: 'Logo & Images', icon: Image },
 ];
 
 export const AdminLayout = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const handleLogout = () => {
-    logout();
-    navigate('/admin/login');
-  };
-
-  const goBackToSite = () => {
-    navigate('/');
-  };
-
   return (
-    <div className="min-h-screen bg-gray-900 text-white">
-      <div className="bg-[#C8102E] text-white text-center py-1 text-xs font-bold uppercase tracking-widest">
+    <div style={{ minHeight: '100vh', background: '#0f0f0f', color: '#fff' }}>
+      {/* Top warning bar */}
+      <div style={{ background: '#B91C1C', textAlign: 'center', padding: '5px', fontSize: '0.72rem', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase' }}>
         Admin Mode — Changes affect the live website
       </div>
 
-      <nav className="bg-gray-800 border-b border-gray-700 sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="flex items-center justify-between h-14">
-            <div className="flex items-center gap-3">
-              <button
-                onClick={goBackToSite}
-                className="flex items-center gap-2 text-sm text-gray-300 hover:text-white transition-colors"
-                aria-label="Back to website"
-              >
-                <ArrowLeft size={16} /> Back
-              </button>
-
-              <Link to="/admin" className="text-lg font-bold text-white flex items-center gap-2">
-                <span className="text-[#C8102E]">ACHS</span> Staff Portal
-              </Link>
-
-              <div className="hidden lg:flex items-center gap-1.5 px-2 py-1 bg-white/10 border border-white/10 rounded-full text-[10px] font-bold text-green-300 uppercase tracking-tighter">
-                <ShieldCheck size={12} />
-                Defense Active
-              </div>
-            </div>
-
-            <div className="hidden md:flex items-center gap-1">
-              {adminTabs.map((tab) => {
-                const Icon = tab.icon;
-                const isActive = location.pathname === tab.path;
-                return (
-                  <Link
-                    key={tab.path}
-                    to={tab.path}
-                    className={`flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
-                      isActive
-                        ? 'bg-[#C8102E] text-white'
-                        : 'text-gray-300 hover:bg-gray-700 hover:text-white'
-                    }`}
-                  >
-                    <Icon size={16} />
-                    {tab.label}
-                  </Link>
-                );
-              })}
-            </div>
-
-            <button
-              onClick={handleLogout}
-              className="flex items-center gap-2 text-sm text-gray-400 hover:text-red-400 transition-colors"
-            >
-              <LogOut size={16} /> Logout
-            </button>
+      {/* Nav bar */}
+      <nav style={{ background: '#1a1a1a', borderBottom: '1px solid #2a2a2a', position: 'sticky', top: 0, zIndex: 50 }}>
+        <div style={{ maxWidth: '72rem', margin: '0 auto', padding: '0 1rem', display: 'flex', alignItems: 'center', height: 52, gap: '1rem' }}>
+          {/* Back + title */}
+          <button onClick={() => navigate('/')} style={{ background: 'none', border: 'none', color: '#aaa', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.3rem', fontSize: '0.8rem', flexShrink: 0 }}>
+            <ArrowLeft size={14} /> Back
+          </button>
+          <Link to="/admin" style={{ fontWeight: 700, fontSize: '0.9rem', color: '#fff', textDecoration: 'none', flexShrink: 0 }}>
+            <span style={{ color: '#B91C1C' }}>ACHS</span> Staff Portal
+          </Link>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', padding: '0.2rem 0.6rem', background: 'rgba(255,255,255,0.06)', borderRadius: '2rem', fontSize: '0.65rem', fontWeight: 700, color: '#4ade80', textTransform: 'uppercase', letterSpacing: '0.06em', flexShrink: 0 }}>
+            <ShieldCheck size={11} /> Active
           </div>
+
+          <div style={{ flex: 1 }} />
+
+          <button onClick={() => { logout(); navigate('/admin/login'); }}
+            style={{ background: 'none', border: 'none', color: '#888', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.35rem', fontSize: '0.8rem', flexShrink: 0 }}>
+            <LogOut size={14} /> Logout
+          </button>
         </div>
 
-        <div className="md:hidden overflow-x-auto px-2 pb-2 flex gap-1">
-          {adminTabs.map((tab) => {
+        {/* Tab row — scrollable on small screens */}
+        <div style={{ overflowX: 'auto', display: 'flex', gap: '0.15rem', padding: '0.35rem 1rem', maxWidth: '72rem', margin: '0 auto' }}>
+          {adminTabs.map(tab => {
             const Icon = tab.icon;
-            const isActive = location.pathname === tab.path;
+            const active = location.pathname === tab.path;
             return (
-              <Link
-                key={tab.path}
-                to={tab.path}
-                className={`flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs whitespace-nowrap font-medium ${
-                  isActive ? 'bg-[#C8102E] text-white' : 'text-gray-400 bg-gray-700'
-                }`}
-              >
-                <Icon size={14} />
-                {tab.label}
+              <Link key={tab.path} to={tab.path} style={{
+                display: 'flex', alignItems: 'center', gap: '0.35rem',
+                padding: '0.35rem 0.75rem', borderRadius: '0.4rem',
+                fontSize: '0.76rem', fontWeight: active ? 700 : 500,
+                whiteSpace: 'nowrap', textDecoration: 'none',
+                color: active ? '#fff' : '#888',
+                background: active ? '#B91C1C' : 'transparent',
+                transition: 'background 0.15s, color 0.15s',
+              }}>
+                <Icon size={13} /> {tab.label}
               </Link>
             );
           })}
         </div>
       </nav>
 
-      <main className="max-w-7xl mx-auto px-4 py-8">
+      {/* Page content */}
+      <main style={{ maxWidth: '72rem', margin: '0 auto', padding: '2rem 1.25rem' }}>
         <Outlet />
       </main>
     </div>

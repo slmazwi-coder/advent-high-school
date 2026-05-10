@@ -1,154 +1,150 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X, User } from 'lucide-react';
-import { cn } from '../lib/utils';
+import { Menu, X, User, ChevronDown } from 'lucide-react';
 
-const navLinks = [
+const NAV_LINKS = [
   { name: 'Home', path: '/' },
   { name: 'About', path: '/about' },
   { name: 'Staff', path: '/staff' },
-  { name: 'Documents', path: '/documents' },
-  { name: 'Achievements', path: '/achievements' },
-  { name: 'Sport', path: '/sport' },
-  { name: 'Activities', path: '/activities' },
+  { name: 'Academics', path: '/documents', sub: [
+    { name: 'Documents', path: '/documents' },
+    { name: 'Achievements', path: '/achievements' },
+  ]},
+  { name: 'School Life', path: '/sport', sub: [
+    { name: 'Sport', path: '/sport' },
+    { name: 'Activities', path: '/activities' },
+  ]},
   { name: 'Admissions', path: '/admissions' },
   { name: 'Boarding', path: '/boarding' },
   { name: 'Contact', path: '/contact' },
 ];
 
 export const Navbar = () => {
-  const [isOpen, setIsOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const location = useLocation();
 
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 8);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
+  useEffect(() => { setOpen(false); }, [location.pathname]);
+
+  const isActive = (path: string) => location.pathname === path;
+
   return (
-    <nav className="w-full sticky top-0 z-50" style={ { background: '#ffffff', borderBottom: '4px solid #C8102E' } }>
+    <>
+      <header
+        className="sticky top-0 z-50 w-full transition-shadow duration-200"
+        style={{
+          background: '#fff',
+          borderBottom: '1px solid #E5E2D9',
+          boxShadow: scrolled ? '0 2px 16px rgba(0,0,0,0.08)' : 'none',
+        }}
+      >
+        {/* Top strip */}
+        <div style={{ background: '#111111', padding: '6px 1.25rem' }}>
+          <div className="container-narrow flex items-center justify-between">
+            <p style={{ color: 'rgba(255,255,255,0.55)', fontSize: '0.72rem', letterSpacing: '0.08em', textTransform: 'uppercase', margin: 0 }}>
+              Maluti, Matatiele · Eastern Cape
+            </p>
+            <div style={{ display: 'flex', gap: '1rem' }}>
+              <a href="tel:0723000020" style={{ color: 'rgba(255,255,255,0.55)', fontSize: '0.72rem', textDecoration: 'none' }}>072 300 0020</a>
+              <a href="mailto:adventhighschool90@gmail.com" style={{ color: 'rgba(255,255,255,0.55)', fontSize: '0.72rem', textDecoration: 'none' }}>adventhighschool90@gmail.com</a>
+            </div>
+          </div>
+        </div>
 
-      {/* ── Top bar: Logo + School name + Student Portal ── */}
-      <div className="w-full" style={ { borderBottom: '1px solid rgba(17,24,39,0.12)' } }>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
+        {/* Main bar */}
+        <div className="container-narrow" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: '64px' }}>
 
-            {/* Logo + Name */}
-            <Link to="/" className="flex items-center gap-3 min-w-0 flex-1">
-              <div className="h-11 w-11 shrink-0 rounded-xl bg-white flex items-center justify-center overflow-hidden shadow-md" style={ { border: '2px solid #C8102E' } }>
-                <img
-                  src="/logo.svg"
-                  alt="Advent Comprehensive High School logo"
-                  className="h-full w-full object-cover"
-                />
+          {/* Logo */}
+          <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', textDecoration: 'none', flexShrink: 0 }}>
+            <img src="/logo.svg" alt="ACHS" style={{ width: 40, height: 40, borderRadius: 8, border: '2px solid #B91C1C', background: '#fff' }} />
+            <div>
+              <div style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: '0.95rem', color: '#111', lineHeight: 1.2 }}>
+                Advent Comprehensive
               </div>
-              <div className="min-w-0">
-                <span className="md:hidden text-sm font-bold block leading-tight" style={ { color: '#111827' } }>
-                  Advent High School
-                </span>
-                <span className="hidden md:block text-base font-bold leading-tight" style={ { color: '#111827' } }>
-                  Advent Comprehensive High School
-                </span>
-                <span className="text-xs font-semibold tracking-wide uppercase" style={ { color: 'rgba(17,24,39,0.65)' } }>
-                  The fear of the Lord is the beginning of wisdom
-                </span>
+              <div style={{ fontFamily: 'var(--font-body)', fontSize: '0.7rem', color: '#888', fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+                High School
               </div>
+            </div>
+          </Link>
+
+          {/* Desktop nav */}
+          <nav className="hidden md:flex" style={{ alignItems: 'center', gap: '0.25rem' }}>
+            {NAV_LINKS.map(link => (
+              <Link
+                key={link.path}
+                to={link.path}
+                style={{
+                  fontFamily: 'var(--font-body)',
+                  fontSize: '0.82rem',
+                  fontWeight: 500,
+                  padding: '0.4rem 0.75rem',
+                  borderRadius: '0.4rem',
+                  textDecoration: 'none',
+                  color: isActive(link.path) ? '#B91C1C' : '#333',
+                  background: isActive(link.path) ? '#FEE2E2' : 'transparent',
+                  transition: 'all 0.15s',
+                  whiteSpace: 'nowrap',
+                }}
+                onMouseEnter={e => { if (!isActive(link.path)) (e.currentTarget as HTMLElement).style.background = '#f5f5f5'; }}
+                onMouseLeave={e => { if (!isActive(link.path)) (e.currentTarget as HTMLElement).style.background = 'transparent'; }}
+              >
+                {link.name}
+              </Link>
+            ))}
+          </nav>
+
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexShrink: 0 }}>
+            <Link to="/student/login" className="hidden md:inline-flex btn btn-primary" style={{ padding: '0.5rem 1rem', fontSize: '0.8rem' }}>
+              <User size={14} /> Student Portal
             </Link>
-
-            {/* Desktop: Student Portal button */}
-            <div className="hidden md:flex items-center gap-3 shrink-0">
-              <Link
-                to="/student/login"
-                className={cn(
-                  'px-4 py-2 rounded-lg text-sm font-bold transition-colors inline-flex items-center gap-2',
-                  location.pathname.startsWith('/student')
-                    ? 'text-white bg-[#C8102E]'
-                    : 'text-[#111827] border-2 border-[#C8102E] hover:bg-[#C8102E] hover:text-white'
-                )}
-              >
-                <User size={15} /> Student Portal
-              </Link>
-            </div>
-
-            {/* Mobile: hamburger */}
-            <div className="md:hidden flex items-center shrink-0 ml-2">
-              <button
-                onClick={() => setIsOpen(!isOpen)}
-                className="p-2"
-                style={ { color: '#111827' } }
-                aria-label="Open menu"
-              >
-                {isOpen ? <X size={26} /> : <Menu size={26} />}
-              </button>
-            </div>
+            <button
+              className="md:hidden"
+              onClick={() => setOpen(v => !v)}
+              aria-label="Toggle menu"
+              style={{ padding: '0.5rem', border: 'none', background: 'none', cursor: 'pointer', color: '#111' }}
+            >
+              {open ? <X size={24} /> : <Menu size={24} />}
+            </button>
           </div>
         </div>
-      </div>
 
-      {/* ── Bottom bar: Nav links (desktop only) ── */}
-      <div className="hidden md:block w-full" style={ { background: '#ffffff' } }>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-center flex-wrap gap-x-1 gap-y-0 py-1">
-            {navLinks.map((link) => (
+        {/* Mobile menu */}
+        {open && (
+          <div style={{ background: '#fff', borderTop: '1px solid #E5E2D9', padding: '1rem 1.25rem 1.5rem' }}>
+            {NAV_LINKS.map(link => (
               <Link
                 key={link.path}
                 to={link.path}
-                className="px-3 py-2 rounded-md text-sm font-medium transition-colors whitespace-nowrap"
-                style={
-                  location.pathname === link.path
-                    ? { color: '#ffffff', background: '#C8102E', fontWeight: 700 }
-                    : { color: '#111827' }
-                }
-                onMouseEnter={e => {
-                  if (location.pathname !== link.path) {
-                    (e.target as HTMLElement).style.background = 'rgba(200,16,46,0.08)';
-                  }
-                }}
-                onMouseLeave={e => {
-                  if (location.pathname !== link.path) {
-                    (e.target as HTMLElement).style.background = 'transparent';
-                  }
+                style={{
+                  display: 'block',
+                  fontFamily: 'var(--font-body)',
+                  fontSize: '0.95rem',
+                  fontWeight: isActive(link.path) ? 600 : 400,
+                  color: isActive(link.path) ? '#B91C1C' : '#222',
+                  padding: '0.75rem 0',
+                  borderBottom: '1px solid #f0efe9',
+                  textDecoration: 'none',
                 }}
               >
                 {link.name}
               </Link>
             ))}
+            <Link
+              to="/student/login"
+              className="btn btn-primary"
+              style={{ marginTop: '1rem', width: '100%', justifyContent: 'center' }}
+            >
+              <User size={15} /> Student Portal
+            </Link>
           </div>
-        </div>
-      </div>
-
-      {/* ── Mobile dropdown ── */}
-      {isOpen && (
-        <div className="md:hidden shadow-lg" style={ { background: '#ffffff', borderTop: '1px solid rgba(17,24,39,0.12)' } }>
-          <div className="px-3 pt-2 pb-4 space-y-1">
-            {navLinks.map((link) => (
-              <Link
-                key={link.path}
-                to={link.path}
-                onClick={() => setIsOpen(false)}
-                className="flex items-center px-4 py-3 rounded-lg text-sm font-medium transition-colors"
-                style={
-                  location.pathname === link.path
-                    ? { color: '#ffffff', background: '#C8102E', fontWeight: 700 }
-                    : { color: '#111827' }
-                }
-              >
-                {link.name}
-              </Link>
-            ))}
-
-            <div className="pt-2" style={ { borderTop: '1px solid rgba(17,24,39,0.12)' } }>
-              <Link
-                to="/student/login"
-                onClick={() => setIsOpen(false)}
-                className="flex items-center gap-2 px-4 py-3 rounded-lg text-sm font-bold transition-colors"
-                style={
-                  location.pathname.startsWith('/student')
-                    ? { color: '#ffffff', background: '#C8102E' }
-                    : { color: '#111827', background: 'rgba(200,16,46,0.08)' }
-                }
-              >
-                <User size={15} /> Student Portal
-              </Link>
-            </div>
-          </div>
-        </div>
-      )}
-    </nav>
+        )}
+      </header>
+    </>
   );
 };

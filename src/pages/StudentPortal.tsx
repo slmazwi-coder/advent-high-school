@@ -1,12 +1,9 @@
 import React from 'react';
-
-export const StudentPortal = () => {
-  return (
-    <div className="min-h-screen bg-gray-900 flex items-center justify-center p-4">
-      <div className="bg-gray-800 rounded-2xl shadow-2xl p-8 w-full max-w-lg border border-gray-700">
-        <h1 className="text-2xl font-bold text-white text-center">Student Portal</h1>
-        <p className="text-gray-400 text-sm mt-2 text-center">Coming soon</p>
-      </div>
+export const StudentPortal = () => (
+  <div style={{ minHeight: '100vh', background: '#111', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '2rem' }}>
+    <div style={{ background: '#1a1a1a', border: '1px solid #333', borderRadius: '1rem', padding: '2.5rem', maxWidth: 440, width: '100%', textAlign: 'center' }}>
+      <h1 style={{ fontFamily: 'var(--font-display)', color: '#fff', fontSize: '1.5rem', margin: '0 0 0.5rem' }}>Student Portal</h1>
+      <p style={{ color: '#888', fontSize: '0.9rem' }}>Coming soon</p>
     </div>
-  );
-};
+  </div>
+);

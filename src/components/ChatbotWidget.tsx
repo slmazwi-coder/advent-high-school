@@ -1,51 +1,13 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { MessageCircle, X, Send, Globe, ChevronDown, Sparkles } from 'lucide-react';
+import { MessageCircle, X, Send, Sparkles } from 'lucide-react';
 import { getApplications, type Application } from '../admin/utils/storage';
 
 type ChatRole = 'user' | 'bot';
-type ChatMessage = {
-  id: string;
-  role: ChatRole;
-  text: string;
-  createdAt: number;
-  detectedLang?: string;
-};
+type ChatMessage = { id: string; role: ChatRole; text: string; createdAt: number; };
 
-type SupportedLang = 'eng' | 'zul' | 'xho' | 'sot';
-
-const LANG_LABELS: Record<SupportedLang, string> = {
-  eng: 'English',
-  zul: 'isiZulu',
-  xho: 'isiXhosa',
-  sot: 'Sesotho',
-};
-
-const VULAVULA_LANG_MAP: Record<SupportedLang, string> = {
-  eng: 'eng_Latn',
-  zul: 'zul_Latn',
-  xho: 'xho_Latn',
-  sot: 'sot_Latn',
-};
-
-const QUICK_QUESTIONS = [
-  'How do I apply for admission?',
-  'What documents do I need?',
-  'Do you offer matric rewrite?',
-  'How do I contact the school?',
-];
-
-function uid() {
-  return `${Date.now()}-${Math.random().toString(16).slice(2)}`;
-}
-
-function normalize(s: string) {
-  return s.toLowerCase().trim();
-}
-
-function formatDate(iso: string | undefined) {
-  if (!iso) return '';
-  try { return new Date(iso).toLocaleDateString(); } catch { return iso; }
-}
+function uid() { return `${Date.now()}-${Math.random().toString(16).slice(2)}`; }
+function normalize(s: string) { return s.toLowerCase().trim(); }
+function formatDate(iso?: string) { if (!iso) return ''; try { return new Date(iso).toLocaleDateString(); } catch { return iso; } }
 
 type StatusQuery =
   | { kind: 'studentNumber'; studentNumber: string }
@@ -58,437 +20,236 @@ function parseStatusQuery(input: string): StatusQuery | null {
   const dobMatch = text.match(/\b(19|20)\d{2}-\d{2}-\d{2}\b/);
   if (dobMatch) {
     const dob = dobMatch[0];
-    const namePart = text.replace(dob, ' ').replace(/\b(dob|date of birth)\b/g, ' ');
-    const tokens = namePart.split(/\s+/).filter(Boolean);
-    const statusIdx = tokens.findIndex((t) => t === 'status');
-    const startIdx = statusIdx >= 0 ? statusIdx + 1 : 0;
-    const firstName = tokens[startIdx];
-    const lastName = tokens[startIdx + 1];
-    if (firstName && lastName) return { kind: 'nameAndDob', firstName, lastName, dob };
+    const tokens = text.replace(dob, ' ').split(/\s+/).filter(Boolean);
+    const idx = tokens.findIndex(t => t === 'status');
+    const start = idx >= 0 ? idx + 1 : 0;
+    if (tokens[start] && tokens[start + 1]) return { kind: 'nameAndDob', firstName: tokens[start], lastName: tokens[start + 1], dob };
   }
   return null;
 }
 
 function findApplication(apps: Application[], q: StatusQuery) {
-  if (q.kind === 'studentNumber') {
-    return apps.find((a) => normalize(a.studentNumber) === normalize(q.studentNumber));
-  }
-  return apps.find((a) =>
-    normalize(a.firstName) === normalize(q.firstName) &&
-    normalize(a.lastName) === normalize(q.lastName) &&
-    normalize(a.dob) === normalize(q.dob)
-  );
-}
-
-async function detectLanguage(text: string): Promise<SupportedLang> {
-  try {
-    const key =
-      (import.meta as any).env?.VITE_VULAVULA_API_KEY ||
-      (import.meta as any).env?.VULAVULA_API_KEY ||
-      '';
-    if (!key) return 'eng';
-    const res = await fetch('https://vulavula-services.lelapa.ai/api/v1/classify/process', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'X-CLIENT-TOKEN': key },
-      body: JSON.stringify({ text }),
-    });
-    if (!res.ok) return 'eng';
-    const data = await res.json();
-    const detected = (data?.predicted_label ?? '').toLowerCase();
-    if (detected.includes('zul')) return 'zul';
-    if (detected.includes('xho')) return 'xho';
-    if (detected.includes('sot')) return 'sot';
-    return 'eng';
-  } catch {
-    return 'eng';
-  }
-}
-
-async function translateText(text: string, src: SupportedLang, tgt: SupportedLang): Promise<string> {
-  if (src === tgt) return text;
-  try {
-    const key =
-      (import.meta as any).env?.VITE_VULAVULA_API_KEY ||
-      (import.meta as any).env?.VULAVULA_API_KEY ||
-      '';
-    if (!key) return text;
-    const res = await fetch('https://vulavula-services.lelapa.ai/api/v1/translate/process', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'X-CLIENT-TOKEN': key },
-      body: JSON.stringify({
-        input_text: text,
-        source_lang: VULAVULA_LANG_MAP[src],
-        target_lang: VULAVULA_LANG_MAP[tgt],
-      }),
-    });
-    if (!res.ok) return text;
-    const data = await res.json();
-    return data?.translation ?? text;
-  } catch {
-    return text;
-  }
+  if (q.kind === 'studentNumber') return apps.find(a => normalize(a.studentNumber) === normalize(q.studentNumber));
+  return apps.find(a => normalize(a.firstName) === normalize(q.firstName) && normalize(a.lastName) === normalize(q.lastName) && normalize(a.dob) === normalize(q.dob));
 }
 
 const SYSTEM_PROMPT = `You are a warm, helpful assistant for Advent Comprehensive High School in Matatiele, Eastern Cape, South Africa.
+Help parents, learners, and guardians with: admissions, required documents, fees, school hours, subjects, sport, activities, matric rewrite, and contact info.
+School details: Maluti, Matatiele, Eastern Cape. Phone: 072 300 0020 / 060 700 8052. Email: adventhighschool90@gmail.com. Grades 8–12. Matric rewrite offered.
+Be warm, clear and concise. For specific questions you're unsure about, direct them to call or email the school.`;
 
-You help parents, learners, guardians and community members with anything about the school:
-- Admissions and application process
-- Required documents for applications
-- School fees, payment and support
-- School hours
-- Subjects, activities, sport and school life
-- Matric rewrite information
-- Contact information
+const QUICK = ['How to apply?', 'Documents needed?', 'Matric rewrite?', 'School hours?'];
 
-School details:
-- Name: Advent Comprehensive High School
-- Location: Maluti, Matatiele, Eastern Cape
-- Phone: 072 300 0020 / 060 700 8052
-- Email: adventhighschool90@gmail.com
-- Motto: "The fear of the Lord is the beginning of wisdom"
-- Grades: Grade 8 to Grade 12
-- Matric rewrite is offered
-
-Be warm, clear and concise. If you are unsure about something very specific, direct them to call or email the school.`;
-
-async function askClaude(userMessage: string): Promise<string> {
+async function askClaude(msg: string): Promise<string> {
   try {
-    const response = await fetch('https://api.anthropic.com/v1/messages', {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 900,
-        system: SYSTEM_PROMPT,
-        messages: [{ role: 'user', content: userMessage }],
-      }),
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ model: 'claude-sonnet-4-20250514', max_tokens: 900, system: SYSTEM_PROMPT, messages: [{ role: 'user', content: msg }] }),
     });
-
-    if (!response.ok) {
-      const errText = await response.text();
-      console.warn('[Chatbot] Claude API error:', response.status, errText);
-      throw new Error(`HTTP ${response.status}`);
-    }
-
-    const data = await response.json();
-    const text = data?.content
-      ?.filter((b: any) => b.type === 'text')
-      .map((b: any) => b.text)
-      .join('\n')
-      .trim();
-
-    if (!text) throw new Error('Empty response');
-    return text;
-  } catch (err) {
-    console.error('[Chatbot] Claude request failed:', err);
-    return 'I\'m having trouble connecting right now. Please contact the school directly at 072 300 0020 / 060 700 8052 or adventhighschool90@gmail.com.';
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = await res.json();
+    return data?.content?.filter((b: any) => b.type === 'text').map((b: any) => b.text).join('\n').trim() || '';
+  } catch {
+    return "I'm having trouble connecting. Please call the school: 072 300 0020.";
   }
 }
 
-export function ChatbotWidget(props: { defaultOpen?: boolean }) {
-  const [open, setOpen] = useState(Boolean(props.defaultOpen));
+export function ChatbotWidget() {
+  const [open, setOpen] = useState(false);
   const [input, setInput] = useState('');
-  const [isTyping, setIsTyping] = useState(false);
-  const [currentLang, setCurrentLang] = useState<SupportedLang>('eng');
-  const [showLangMenu, setShowLangMenu] = useState(false);
-  const [messages, setMessages] = useState<ChatMessage[]>([
-    {
-      id: uid(),
-      role: 'bot',
-      createdAt: Date.now(),
-      text: "Hello! I can help with admissions, matric rewrite, school info, and contact details for Advent Comprehensive High School. What would you like to know?",
-    },
-  ]);
-
+  const [typing, setTyping] = useState(false);
+  const [messages, setMessages] = useState<ChatMessage[]>([{
+    id: uid(), role: 'bot', createdAt: Date.now(),
+    text: 'Hello! I can help with admissions, matric rewrite, school hours, and more. What would you like to know?',
+  }]);
   const endRef = useRef<HTMLDivElement | null>(null);
   const inputRef = useRef<HTMLInputElement | null>(null);
-  const langMenuRef = useRef<HTMLDivElement | null>(null);
+  const apps = useMemo(() => { try { return getApplications(); } catch { return []; } }, [open]);
 
-  useEffect(() => {
-    endRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages, open]);
+  useEffect(() => { endRef.current?.scrollIntoView({ behavior: 'smooth' }); }, [messages, open]);
+  useEffect(() => { if (open) setTimeout(() => inputRef.current?.focus(), 150); }, [open]);
 
-  useEffect(() => {
-    if (open) setTimeout(() => inputRef.current?.focus(), 150);
-  }, [open]);
-
-  useEffect(() => {
-    function onKeyDown(e: KeyboardEvent) {
-      if (e.key === 'Escape') {
-        if (showLangMenu) setShowLangMenu(false);
-        else setOpen(false);
-      }
-    }
-    if (open) window.addEventListener('keydown', onKeyDown);
-    return () => window.removeEventListener('keydown', onKeyDown);
-  }, [open, showLangMenu]);
-
-  useEffect(() => {
-    function onClickOutside(e: MouseEvent) {
-      if (langMenuRef.current && !langMenuRef.current.contains(e.target as Node)) {
-        setShowLangMenu(false);
-      }
-    }
-    if (showLangMenu) document.addEventListener('mousedown', onClickOutside);
-    return () => document.removeEventListener('mousedown', onClickOutside);
-  }, [showLangMenu]);
-
-  const apps = useMemo(() => {
-    try { return getApplications(); } catch { return []; }
-  }, [open]);
-
-  const showQuickQuestions = messages.length <= 1 && !isTyping;
-
-  async function send(textOverride?: string) {
-    const text = (textOverride ?? input).trim();
-    if (!text || isTyping) return;
-
-    const userMsg: ChatMessage = { id: uid(), role: 'user', text, createdAt: Date.now() };
-    setMessages((prev) => [...prev, userMsg]);
+  async function send(override?: string) {
+    const text = (override ?? input).trim();
+    if (!text || typing) return;
+    setMessages(prev => [...prev, { id: uid(), role: 'user', text, createdAt: Date.now() }]);
     setInput('');
-    setIsTyping(true);
-
+    setTyping(true);
     try {
-      const statusQ = parseStatusQuery(text);
-      if (statusQ) {
-        const app = findApplication(apps, statusQ);
-        const replyText = app
-          ? `I found the application for ${app.firstName} ${app.lastName} (Student number: ${app.studentNumber}). Status: ${app.status}.${app.submittedDate ? ` Submitted: ${formatDate(app.submittedDate)}.` : ''}`
-          : 'I could not find a matching application. Please double-check the student number or learner name and date of birth.';
-        setMessages((prev) => [...prev, { id: uid(), role: 'bot', text: replyText, createdAt: Date.now() }]);
-        setIsTyping(false);
+      const sq = parseStatusQuery(text);
+      if (sq) {
+        const app = findApplication(apps, sq);
+        const reply = app
+          ? `Application found: ${app.firstName} ${app.lastName} (${app.studentNumber}). Status: ${app.status}.${app.submittedDate ? ` Submitted: ${formatDate(app.submittedDate)}.` : ''}`
+          : 'No matching application found. Please check the student number or learner name and date of birth.';
+        setMessages(prev => [...prev, { id: uid(), role: 'bot', text: reply, createdAt: Date.now() }]);
         return;
       }
-
-      const detectedLang = await detectLanguage(text);
-      setCurrentLang(detectedLang);
-
-      const englishText = detectedLang !== 'eng'
-        ? await translateText(text, detectedLang, 'eng')
-        : text;
-
-      const englishReply = await askClaude(englishText);
-
-      const finalReply = detectedLang !== 'eng'
-        ? await translateText(englishReply, 'eng', detectedLang)
-        : englishReply;
-
-      setMessages((prev) => [
-        ...prev,
-        {
-          id: uid(),
-          role: 'bot',
-          text: finalReply,
-          createdAt: Date.now(),
-          detectedLang: detectedLang !== 'eng' ? LANG_LABELS[detectedLang] : undefined,
-        },
-      ]);
+      const reply = await askClaude(text);
+      setMessages(prev => [...prev, { id: uid(), role: 'bot', text: reply, createdAt: Date.now() }]);
     } catch {
-      setMessages((prev) => [
-        ...prev,
-        {
-          id: uid(),
-          role: 'bot',
-          text: 'Something went wrong. Please contact the school at 072 300 0020.',
-          createdAt: Date.now(),
-        },
-      ]);
+      setMessages(prev => [...prev, { id: uid(), role: 'bot', text: 'Something went wrong. Please call 072 300 0020.', createdAt: Date.now() }]);
     } finally {
-      setIsTyping(false);
+      setTyping(false);
     }
   }
 
   return (
     <>
-      <style>{`
-        @keyframes chat-in {
-          from { opacity: 0; transform: translateY(14px) scale(0.97); }
-          to   { opacity: 1; transform: translateY(0) scale(1); }
-        }
-        .chat-window { animation: chat-in 0.2s cubic-bezier(0.34, 1.1, 0.64, 1) both; }
-      `}</style>
-
       {open && (
-        <div
-          className="chat-window fixed z-50
-            bottom-[4.5rem] right-3
-            sm:bottom-24 sm:right-6
-            w-[calc(100vw-1.5rem)] max-w-[375px]
-            h-[min(70vh,560px)]
-            bg-white rounded-2xl shadow-2xl border border-gray-200
-            flex flex-col overflow-hidden"
-          role="dialog"
-          aria-label="School help desk chatbot"
-        >
-          <div className="flex items-center justify-between px-4 py-3 bg-[#C8102E] text-white shrink-0">
-            <div className="flex items-center gap-2.5 min-w-0">
-              <div className="w-9 h-9 rounded-full bg-white/20 border border-white/30 flex items-center justify-center shrink-0">
-                <Sparkles size={16} />
+        <div style={{
+          position: 'fixed', zIndex: 50,
+          bottom: '5rem', right: '1rem',
+          width: 'min(calc(100vw - 2rem), 360px)',
+          height: 'min(70vh, 520px)',
+          background: '#fff',
+          borderRadius: '1rem',
+          boxShadow: '0 20px 60px rgba(0,0,0,0.18)',
+          border: '1px solid #E5E2D9',
+          display: 'flex', flexDirection: 'column',
+          overflow: 'hidden',
+          animation: 'fadeUp 0.2s ease both',
+        }}>
+          {/* Header */}
+          <div style={{ background: '#B91C1C', padding: '0.875rem 1rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexShrink: 0 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.625rem' }}>
+              <div style={{ width: 34, height: 34, background: 'rgba(255,255,255,0.15)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <Sparkles size={15} style={{ color: '#fff' }} />
               </div>
-              <div className="min-w-0">
-                <div className="font-bold text-sm leading-tight truncate">Advent Assistant</div>
-                <div className="flex items-center gap-1 text-[11px] text-white/80 mt-0.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-green-300 inline-block animate-pulse" />
+              <div>
+                <div style={{ fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '0.875rem', color: '#fff' }}>Advent Assistant</div>
+                <div style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.7)', display: 'flex', alignItems: 'center', gap: 4 }}>
+                  <span style={{ width: 6, height: 6, background: '#4ade80', borderRadius: '50%', display: 'inline-block' }} />
                   Online · AI-powered
-                  {currentLang !== 'eng' && <span className="ml-1">· {LANG_LABELS[currentLang]}</span>}
                 </div>
               </div>
             </div>
-
-            <div className="flex items-center gap-1 shrink-0">
-              <div className="relative" ref={langMenuRef}>
-                <button
-                  onClick={() => setShowLangMenu((v) => !v)}
-                  className="flex items-center gap-1 px-2 py-1 rounded-lg bg-white/10 hover:bg-white/20 transition-colors text-xs font-semibold"
-                  aria-label="Change language"
-                >
-                  <Globe size={11} />
-                  <span>{LANG_LABELS[currentLang].split(' ')[0]}</span>
-                  <ChevronDown size={10} className={`transition-transform duration-150 ${showLangMenu ? 'rotate-180' : ''}`} />
-                </button>
-
-                {showLangMenu && (
-                  <div className="absolute right-0 top-full mt-1.5 bg-white rounded-xl shadow-xl border border-gray-100 overflow-hidden z-20 min-w-[130px]">
-                    {(Object.entries(LANG_LABELS) as [SupportedLang, string][]).map(([code, label]) => (
-                      <button
-                        key={code}
-                        onClick={() => { setCurrentLang(code); setShowLangMenu(false); }}
-                        className={`w-full text-left px-3 py-2 text-xs transition-colors ${
-                          currentLang === code
-                            ? 'bg-[#C8102E] text-white font-bold'
-                            : 'text-gray-700 hover:bg-gray-50'
-                        }`}
-                      >
-                        {label}
-                      </button>
-                    ))}
-                  </div>
-                )}
-              </div>
-
-              <button
-                onClick={() => setOpen(false)}
-                className="p-1.5 rounded-lg hover:bg-white/10 transition-colors"
-                aria-label="Close chatbot"
-              >
-                <X size={18} />
-              </button>
-            </div>
+            <button onClick={() => setOpen(false)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#fff', padding: '0.25rem' }} aria-label="Close">
+              <X size={18} />
+            </button>
           </div>
 
-          <div className="flex-1 overflow-y-auto px-3 py-3 space-y-3 bg-gray-50 scroll-smooth">
-            {messages.map((m) => (
-              <div
-                key={m.id}
-                className={`flex items-end gap-1.5 ${m.role === 'user' ? 'flex-row-reverse' : 'flex-row'}`}
-              >
+          {/* Messages */}
+          <div style={{ flex: 1, overflowY: 'auto', padding: '0.875rem', display: 'flex', flexDirection: 'column', gap: '0.625rem', background: '#FAFAF8' }}>
+            {messages.map(m => (
+              <div key={m.id} style={{ display: 'flex', flexDirection: m.role === 'user' ? 'row-reverse' : 'row', alignItems: 'flex-end', gap: '0.5rem' }}>
                 {m.role === 'bot' && (
-                  <div className="w-6 h-6 rounded-full bg-[#C8102E] flex items-center justify-center shrink-0 mb-0.5">
-                    <Sparkles size={11} className="text-white" />
+                  <div style={{ width: 24, height: 24, background: '#B91C1C', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                    <Sparkles size={11} style={{ color: '#fff' }} />
                   </div>
                 )}
-                <div
-                  className={`max-w-[80%] rounded-2xl px-3 py-2.5 text-sm leading-relaxed shadow-sm whitespace-pre-wrap ${
-                    m.role === 'user'
-                      ? 'bg-[#C8102E] text-white rounded-br-sm'
-                      : 'bg-white text-gray-800 border border-gray-100 rounded-bl-sm'
-                  }`}
-                >
+                <div style={{
+                  maxWidth: '80%',
+                  padding: '0.625rem 0.875rem',
+                  borderRadius: m.role === 'user' ? '1rem 1rem 0.25rem 1rem' : '1rem 1rem 1rem 0.25rem',
+                  background: m.role === 'user' ? '#B91C1C' : '#fff',
+                  color: m.role === 'user' ? '#fff' : '#222',
+                  fontSize: '0.85rem',
+                  lineHeight: 1.6,
+                  border: m.role === 'bot' ? '1px solid #E5E2D9' : 'none',
+                  whiteSpace: 'pre-wrap',
+                }}>
                   {m.text}
-                  {m.detectedLang && (
-                    <div className="text-[10px] text-gray-400 mt-1 flex items-center gap-1">
-                      <Globe size={9} /> Detected: {m.detectedLang}
-                    </div>
-                  )}
                 </div>
               </div>
             ))}
-
-            {isTyping && (
-              <div className="flex items-end gap-1.5">
-                <div className="w-6 h-6 rounded-full bg-[#C8102E] flex items-center justify-center shrink-0">
-                  <Sparkles size={11} className="text-white" />
+            {typing && (
+              <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'flex-end' }}>
+                <div style={{ width: 24, height: 24, background: '#B91C1C', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                  <Sparkles size={11} style={{ color: '#fff' }} />
                 </div>
-                <div className="bg-white border border-gray-100 rounded-2xl rounded-bl-sm px-4 py-3 shadow-sm flex gap-1 items-center">
-                  <span className="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce" />
-                  <span className="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce" />
-                  <span className="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce" />
+                <div style={{ background: '#fff', border: '1px solid #E5E2D9', borderRadius: '1rem 1rem 1rem 0.25rem', padding: '0.625rem 0.875rem', display: 'flex', gap: 4 }}>
+                  {[0, 150, 300].map(d => (
+                    <span key={d} style={{ width: 6, height: 6, background: '#bbb', borderRadius: '50%', display: 'inline-block', animation: 'bounce 1s infinite', animationDelay: `${d}ms` }} />
+                  ))}
                 </div>
               </div>
             )}
-
-            {showQuickQuestions && (
-              <div className="pt-1">
-                <p className="text-[11px] text-gray-400 text-center mb-2">Quick questions:</p>
-                <div className="flex flex-wrap gap-1.5 justify-center">
-                  {QUICK_QUESTIONS.map((q) => (
-                    <button
-                      key={q}
-                      onClick={() => send(q)}
-                      className="text-[11px] px-2.5 py-1 rounded-full bg-white border border-[#C8102E]/25 text-[#C8102E] hover:bg-[#C8102E] hover:text-white transition-colors font-medium shadow-sm"
-                    >
+            {messages.length <= 1 && !typing && (
+              <div style={{ marginTop: '0.5rem' }}>
+                <p style={{ fontSize: '0.72rem', color: '#aaa', textAlign: 'center', marginBottom: '0.5rem' }}>Quick questions:</p>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.4rem', justifyContent: 'center' }}>
+                  {QUICK.map(q => (
+                    <button key={q} onClick={() => send(q)} style={{
+                      fontFamily: 'var(--font-body)', fontSize: '0.75rem', padding: '0.3rem 0.75rem',
+                      borderRadius: '2rem', background: '#fff', border: '1px solid #B91C1C',
+                      color: '#B91C1C', cursor: 'pointer', fontWeight: 500,
+                    }}>
                       {q}
                     </button>
                   ))}
                 </div>
               </div>
             )}
-
             <div ref={endRef} />
           </div>
 
-          <div className="p-3 bg-white border-t border-gray-100 shrink-0">
-            <div className="flex gap-2">
+          {/* Input */}
+          <div style={{ padding: '0.75rem', background: '#fff', borderTop: '1px solid #E5E2D9', flexShrink: 0 }}>
+            <div style={{ display: 'flex', gap: '0.5rem' }}>
               <input
                 ref={inputRef}
                 value={input}
-                onChange={(e) => setInput(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send(); }
+                onChange={e => setInput(e.target.value)}
+                onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send(); } }}
+                placeholder="Ask about the school…"
+                disabled={typing}
+                style={{
+                  flex: 1, fontFamily: 'var(--font-body)', fontSize: '0.875rem',
+                  border: '1px solid #E5E2D9', borderRadius: '0.5rem',
+                  padding: '0.6rem 0.875rem', outline: 'none', background: '#FAFAF8',
+                  color: '#111',
                 }}
-                className="flex-1 rounded-xl border border-gray-200 px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-[#C8102E]/20 focus:border-[#C8102E]/40 transition-all bg-gray-50 placeholder:text-gray-400"
-                placeholder="Ask me anything about the school…"
-                aria-label="Chat input"
-                disabled={isTyping}
               />
               <button
                 onClick={() => send()}
-                disabled={isTyping || !input.trim()}
-                className="bg-[#C8102E] hover:bg-[#7A0B1B] text-white px-3 py-2 rounded-xl transition-all disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center shrink-0"
-                aria-label="Send message"
+                disabled={typing || !input.trim()}
+                style={{
+                  background: '#B91C1C', color: '#fff', border: 'none',
+                  borderRadius: '0.5rem', padding: '0.6rem 0.875rem',
+                  cursor: 'pointer', opacity: (typing || !input.trim()) ? 0.4 : 1,
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  flexShrink: 0,
+                }}
+                aria-label="Send"
               >
                 <Send size={16} />
               </button>
             </div>
-            <p className="text-[10px] text-gray-400 mt-1.5 text-center">
+            <p style={{ fontSize: '0.67rem', color: '#bbb', textAlign: 'center', marginTop: '0.4rem' }}>
               AI-powered · English · isiXhosa · isiZulu · Sesotho
             </p>
           </div>
         </div>
       )}
 
+      {/* FAB */}
       <button
-        onClick={() => setOpen((v) => !v)}
-        className="fixed z-50 bottom-4 right-3 sm:bottom-6 sm:right-6
-          w-14 h-14 rounded-full shadow-xl
-          bg-[#C8102E] hover:bg-[#7A0B1B]
-          text-white flex items-center justify-center
-          transition-all duration-200 hover:scale-105 active:scale-95"
-        aria-label={open ? 'Close chatbot' : 'Open chatbot'}
+        onClick={() => setOpen(v => !v)}
+        aria-label={open ? 'Close assistant' : 'Open assistant'}
+        style={{
+          position: 'fixed', zIndex: 50, bottom: '1.25rem', right: '1rem',
+          width: 52, height: 52, borderRadius: '50%',
+          background: '#B91C1C', color: '#fff', border: 'none',
+          boxShadow: '0 4px 20px rgba(185,28,28,0.45)',
+          cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center',
+          transition: 'transform 0.15s, background 0.15s',
+        }}
+        onMouseEnter={e => (e.currentTarget.style.background = '#7F1D1D')}
+        onMouseLeave={e => (e.currentTarget.style.background = '#B91C1C')}
       >
-        <div className="relative">
-          {open ? (
-            <X size={22} />
-          ) : (
+        <div style={{ position: 'relative' }}>
+          {open ? <X size={22} /> : (
             <>
               <MessageCircle size={22} />
-              <span className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 bg-green-400 rounded-full border-2 border-white" />
+              <span style={{ position: 'absolute', top: -2, right: -2, width: 9, height: 9, background: '#4ade80', borderRadius: '50%', border: '2px solid #fff' }} />
             </>
           )}
         </div>
       </button>
+
+      <style>{`@keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-4px)} }`}</style>
     </>
   );
 }

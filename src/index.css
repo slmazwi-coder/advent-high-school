@@ -1,59 +1,57 @@
 @import "tailwindcss";
 
 @theme {
-  --color-school-red: #C8102E;
-  --color-school-deep-red: #7A0B1B;
-  --color-school-white: #ffffff;
-  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --color-crimson: #B91C1C;
+  --color-crimson-dark: #7F1D1D;
+  --color-crimson-light: #FEE2E2;
+  --color-ink: #111111;
+  --color-ink-soft: #444444;
+  --color-paper: #FAFAF8;
+  --color-paper-dark: #F0EFE9;
+  --color-rule: #E5E2D9;
+  --font-display: "Playfair Display", Georgia, serif;
+  --font-body: "DM Sans", system-ui, sans-serif;
 }
 
 @layer base {
-  html, body, #root {
-    width: 100%;
-    min-height: 100vh;
-    margin: 0;
-    padding: 0;
-    overflow-x: hidden;
-  }
-
-  body {
-    @apply bg-[#F8FAFC] text-[#111827];
-  }
-
-  #root {
-    display: flex;
-    flex-direction: column;
-  }
+  *, *::before, *::after { box-sizing: border-box; }
+  html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+  html, body, #root { width: 100%; min-height: 100vh; margin: 0; padding: 0; overflow-x: hidden; }
+  body { font-family: var(--font-body); background: var(--color-paper); color: var(--color-ink); line-height: 1.6; -webkit-font-smoothing: antialiased; }
+  #root { display: flex; flex-direction: column; }
+  h1, h2, h3, h4 { font-family: var(--font-display); line-height: 1.15; }
 }
 
-.glass-nav {
-  background: #ffffff;
-  border-bottom: 4px solid #C8102E;
-  @apply sticky top-0 z-50 w-full;
-}
+.font-display { font-family: var(--font-display); }
+.font-body    { font-family: var(--font-body); }
 
-.btn-primary {
-  background: #C8102E;
-  color: #ffffff;
-  @apply px-6 py-2 font-semibold transition-colors;
-}
-.btn-primary:hover {
-  background: #7A0B1B;
-}
+.section-pad { padding-top: 5rem; padding-bottom: 5rem; }
+@media (max-width: 640px) { .section-pad { padding-top: 3rem; padding-bottom: 3rem; } }
 
-.section-title {
-  @apply text-3xl font-bold mb-8 text-center;
-  color: #111827;
-}
+.container-narrow { max-width: 72rem; margin-left: auto; margin-right: auto; padding-left: 1.25rem; padding-right: 1.25rem; }
 
-.card {
-  background: #ffffff;
-  border: 1px solid rgba(17, 24, 39, 0.08);
-  @apply p-6 shadow-sm hover:shadow-md transition-shadow;
-  border-radius: 0.75rem;
-}
+.card { background: #fff; border: 1px solid var(--color-rule); border-radius: 1rem; padding: 1.5rem; transition: box-shadow 0.2s; }
+.card:hover { box-shadow: 0 8px 32px rgba(0,0,0,0.07); }
 
-main {
-  width: 100%;
-  flex: 1;
-}
+.rule-accent { display: inline-block; width: 2.5rem; height: 3px; background: var(--color-crimson); border-radius: 2px; margin-bottom: 1rem; }
+
+.page-header { background: var(--color-ink); padding: 3.5rem 1.25rem 3rem; text-align: center; }
+.page-header h1 { font-family: var(--font-display); font-size: clamp(2rem, 6vw, 3rem); color: #fff; margin: 0; }
+.page-header p { color: rgba(255,255,255,0.6); margin-top: 0.5rem; font-size: 0.95rem; }
+
+.btn { display: inline-flex; align-items: center; gap: 0.5rem; font-family: var(--font-body); font-weight: 600; font-size: 0.9rem; padding: 0.75rem 1.75rem; border-radius: 0.5rem; cursor: pointer; transition: all 0.18s; border: 2px solid transparent; text-decoration: none; }
+.btn-primary { background: var(--color-crimson); color: #fff; border-color: var(--color-crimson); }
+.btn-primary:hover { background: var(--color-crimson-dark); border-color: var(--color-crimson-dark); }
+.btn-outline { background: transparent; color: #fff; border-color: rgba(255,255,255,0.6); }
+.btn-outline:hover { background: rgba(255,255,255,0.1); border-color: #fff; }
+.btn-ghost { background: transparent; color: var(--color-crimson); border-color: var(--color-crimson); }
+.btn-ghost:hover { background: var(--color-crimson); color: #fff; }
+
+@keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+.fade-up { animation: fadeUp 0.5s ease both; }
+.delay-1 { animation-delay: 0.1s; }
+.delay-2 { animation-delay: 0.2s; }
+.delay-3 { animation-delay: 0.3s; }
+.delay-4 { animation-delay: 0.4s; }
+
+main { width: 100%; flex: 1; }

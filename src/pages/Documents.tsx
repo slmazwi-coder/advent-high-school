@@ -1,14 +1,17 @@
 import React from 'react';
-
-export const Documents = () => {
-  return (
-    <div className="py-16 bg-white">
-      <div className="max-w-5xl mx-auto px-4">
-        <h1 className="section-title">Documents</h1>
-        <div className="card">
-          <p className="text-gray-700">School documents will appear here once uploaded via the Staff Portal.</p>
+export const Documents = () => (
+  <div>
+    <div className="page-header">
+      <div className="rule-accent" style={{ margin: '0 auto 0.75rem' }} />
+      <h1>Documents</h1>
+      <p>School documents and resources</p>
+    </div>
+    <section className="section-pad" style={{ background: '#fff' }}>
+      <div className="container-narrow">
+        <div className="card" style={{ textAlign: 'center', padding: '3rem' }}>
+          <p style={{ color: '#888', fontSize: '0.95rem' }}>Documents will appear here once uploaded by the school.</p>
         </div>
       </div>
-    </div>
-  );
-};
+    </section>
+  </div>
+);

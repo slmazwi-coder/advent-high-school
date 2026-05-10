@@ -1,147 +1,128 @@
-import React, { useEffect, useState } from 'react';
-import { AnimatePresence, motion } from 'motion/react';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
-
-const slides = [
-  { url: './assets/hero/hero1.svg', caption: 'Admissions 2026 still open' },
-];
+import React from 'react';
+import { ArrowRight, Phone } from 'lucide-react';
 
 export const Hero = () => {
-  const [currentIndex, setCurrentIndex] = useState(0);
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrentIndex((prev) => (prev + 1) % slides.length);
-    }, 7000);
-    return () => clearInterval(timer);
-  }, []);
-
-  const next = () => setCurrentIndex((prev) => (prev + 1) % slides.length);
-  const prev = () => setCurrentIndex((prev) => (prev - 1 + slides.length) % slides.length);
-
-  const slide = slides[currentIndex];
-
   return (
-    <div className="relative h-[650px] w-full overflow-hidden" style={ { background: '#111827' } }>
-      <AnimatePresence mode="wait">
-        <motion.div
-          key={currentIndex}
-          initial={ { opacity: 0, scale: 1.03 } }
-          animate={ { opacity: 1, scale: 1 } }
-          exit={ { opacity: 0 } }
-          transition={ { duration: 0.8, ease: 'easeOut' } }
-          className="absolute inset-0"
-        >
-          <img
-            src={slide.url}
-            alt={slide.caption}
-            className="h-full w-full object-cover object-center"
-            style={ { opacity: 0.55 } }
-          />
-          <div className="absolute inset-0"
-            style={ { background: 'linear-gradient(to top, rgba(17,24,39,0.92) 0%, rgba(17,24,39,0.55) 45%, rgba(17,24,39,0.35) 100%)' } } />
-        </motion.div>
-      </AnimatePresence>
-
-      <div className="absolute bottom-24 left-0 right-0 text-center z-20 px-4">
-        <AnimatePresence mode="wait">
-          <motion.p
-            key={`caption-${currentIndex}`}
-            initial={ { opacity: 0, y: 8 } }
-            animate={ { opacity: 1, y: 0 } }
-            exit={ { opacity: 0, y: -8 } }
-            transition={ { duration: 0.35 } }
-            className="text-base md:text-lg font-medium tracking-widest uppercase"
-            style={ { color: 'rgba(255,255,255,0.85)' } }
-          >
-            {slide.caption}
-          </motion.p>
-        </AnimatePresence>
+    <section
+      style={{
+        position: 'relative',
+        background: '#111111',
+        overflow: 'hidden',
+        minHeight: '100svh',
+        display: 'flex',
+        alignItems: 'center',
+      }}
+    >
+      {/* Geometric background accent */}
+      <div style={{
+        position: 'absolute', inset: 0, overflow: 'hidden', pointerEvents: 'none',
+      }}>
+        <div style={{
+          position: 'absolute',
+          top: '-10%', right: '-5%',
+          width: '55%', height: '80%',
+          background: 'linear-gradient(135deg, #B91C1C 0%, #7F1D1D 100%)',
+          clipPath: 'polygon(15% 0%, 100% 0%, 100% 100%, 0% 100%)',
+          opacity: 0.18,
+        }} />
+        <div style={{
+          position: 'absolute',
+          bottom: 0, left: 0, right: 0,
+          height: '1px',
+          background: 'linear-gradient(90deg, transparent, #B91C1C, transparent)',
+        }} />
+        {/* Subtle grid */}
+        <svg style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', opacity: 0.03 }}>
+          <defs>
+            <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+              <path d="M 40 0 L 0 0 0 40" fill="none" stroke="white" strokeWidth="1"/>
+            </pattern>
+          </defs>
+          <rect width="100%" height="100%" fill="url(#grid)" />
+        </svg>
       </div>
 
-      <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-4 z-10">
-        <motion.div
-          initial={ { opacity: 0, scale: 0.9 } }
-          animate={ { opacity: 1, scale: 1 } }
-          transition={ { duration: 0.5, ease: 'easeOut' } }
-          className="mb-5"
-        >
-          <img
-            src="./logo.svg"
-            alt="Advent crest"
-            className="w-20 h-20 md:w-24 md:h-24 rounded-full object-cover shadow-2xl mx-auto"
-            style={ { border: '3px solid #C8102E', background: '#fff' } }
-          />
-        </motion.div>
+      <div className="container-narrow fade-up" style={{ position: 'relative', zIndex: 1, padding: '5rem 1.25rem' }}>
+        <div style={{ maxWidth: '640px' }}>
 
-        <motion.h1
-          initial={ { opacity: 0, y: 12 } }
-          animate={ { opacity: 1, y: 0 } }
-          transition={ { duration: 0.5, delay: 0.1 } }
-          className="text-4xl md:text-6xl font-extrabold mb-3 uppercase tracking-wider"
-          style={ { color: '#ffffff' } }
-        >
-          Advent Comprehensive High School
-        </motion.h1>
+          {/* Eyebrow */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1.5rem' }}>
+            <img src="/logo.svg" alt="ACHS" style={{ width: 48, height: 48, borderRadius: 10, border: '2px solid #B91C1C', background: '#fff', flexShrink: 0 }} />
+            <span style={{
+              fontFamily: 'var(--font-body)',
+              fontSize: '0.72rem',
+              fontWeight: 600,
+              letterSpacing: '0.12em',
+              textTransform: 'uppercase',
+              color: '#B91C1C',
+              background: 'rgba(185,28,28,0.12)',
+              padding: '0.3rem 0.8rem',
+              borderRadius: '2rem',
+              border: '1px solid rgba(185,28,28,0.3)',
+            }}>
+              Admissions 2026 Open
+            </span>
+          </div>
 
-        <motion.p
-          initial={ { opacity: 0, y: 12 } }
-          animate={ { opacity: 1, y: 0 } }
-          transition={ { duration: 0.5, delay: 0.18 } }
-          className="text-base md:text-xl font-light italic mb-8"
-          style={ { color: 'rgba(255,255,255,0.8)' } }
-        >
-          "The fear of the Lord is the beginning of wisdom"
-        </motion.p>
+          {/* Headline */}
+          <h1 style={{
+            fontFamily: 'var(--font-display)',
+            fontSize: 'clamp(2.2rem, 7vw, 4rem)',
+            fontWeight: 900,
+            color: '#ffffff',
+            margin: '0 0 1rem',
+            lineHeight: 1.1,
+          }}>
+            Advent<br />
+            <span style={{ color: '#B91C1C' }}>Comprehensive</span><br />
+            High School
+          </h1>
 
-        <motion.div
-          initial={ { opacity: 0, y: 12 } }
-          animate={ { opacity: 1, y: 0 } }
-          transition={ { duration: 0.5, delay: 0.26 } }
-          className="flex gap-4 flex-wrap justify-center"
-        >
-          <a href="/admissions"
-            className="px-7 py-3 font-bold transition-all rounded-lg shadow-lg hover:shadow-xl hover:-translate-y-0.5"
-            style={ { background: '#C8102E', color: '#ffffff' } }
-          >
-            Enroll Now
-          </a>
-          <a href="/about"
-            className="px-7 py-3 font-bold transition-all rounded-lg hover:-translate-y-0.5"
-            style={ { border: '2px solid #ffffff', color: '#ffffff', background: 'transparent' } }
-          >
-            About Us
-          </a>
-        </motion.div>
+          {/* Motto */}
+          <p style={{
+            fontFamily: 'var(--font-display)',
+            fontStyle: 'italic',
+            fontSize: 'clamp(0.9rem, 2.5vw, 1.1rem)',
+            color: 'rgba(255,255,255,0.55)',
+            margin: '0 0 2.5rem',
+          }}>
+            "The fear of the Lord is the beginning of wisdom"
+          </p>
+
+          {/* CTA row */}
+          <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
+            <a href="/admissions" className="btn btn-primary delay-1 fade-up">
+              Enroll Now <ArrowRight size={16} />
+            </a>
+            <a href="/about" className="btn btn-outline delay-2 fade-up">
+              About Us
+            </a>
+          </div>
+
+          {/* Contact strip */}
+          <div style={{
+            marginTop: '3rem',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.75rem',
+            color: 'rgba(255,255,255,0.4)',
+            fontSize: '0.82rem',
+          }}>
+            <Phone size={14} style={{ color: '#B91C1C', flexShrink: 0 }} />
+            <span>072 300 0020 &nbsp;·&nbsp; 060 700 8052</span>
+          </div>
+        </div>
       </div>
 
-      <button
-        onClick={prev}
-        className="absolute left-4 top-1/2 -translate-y-1/2 p-2 rounded-full z-20 transition-all hover:scale-110"
-        style={ { background: 'rgba(200,16,46,0.25)', color: '#ffffff' } }
-        aria-label="Previous"
-      >
-        <ChevronLeft size={32} />
-      </button>
-      <button
-        onClick={next}
-        className="absolute right-4 top-1/2 -translate-y-1/2 p-2 rounded-full z-20 transition-all hover:scale-110"
-        style={ { background: 'rgba(200,16,46,0.25)', color: '#ffffff' } }
-        aria-label="Next"
-      >
-        <ChevronRight size={32} />
-      </button>
-
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-2 z-30 flex-wrap justify-center max-w-xs">
-        {slides.map((_, i) => (
-          <button
-            key={i}
-            onClick={() => setCurrentIndex(i)}
-            className="h-2 w-2 rounded-full transition-all"
-            style={ { background: i === currentIndex ? '#C8102E' : 'rgba(255,255,255,0.3)' } }
-          />
-        ))}
+      {/* Bottom scroll indicator */}
+      <div style={{
+        position: 'absolute', bottom: '2rem', left: '50%', transform: 'translateX(-50%)',
+        display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px',
+        opacity: 0.3,
+      }}>
+        <div style={{ width: 1, height: 40, background: '#fff' }} />
+        <span style={{ fontSize: '0.65rem', letterSpacing: '0.1em', color: '#fff', textTransform: 'uppercase' }}>Scroll</span>
       </div>
-    </div>
+    </section>
   );
 };

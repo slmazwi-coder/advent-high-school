@@ -1,48 +1,47 @@
 import React, { useEffect, useState } from 'react';
-import { Bell, Calendar, Info } from 'lucide-react';
+import { ArrowRight, Calendar } from 'lucide-react';
 import { getNews, type NewsItem } from '../admin/utils/storage';
 
 export const NewsSection = () => {
   const [notices, setNotices] = useState<NewsItem[]>(getNews());
+  useEffect(() => { setNotices(getNews()); }, []);
 
-  useEffect(() => {
-    setNotices(getNews());
-  }, []);
+  if (notices.length === 0) return null;
 
   return (
-    <section className="py-16 bg-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between mb-10">
-          <h2 className="text-3xl font-bold text-[#111827] flex items-center gap-2">
-            <Bell className="text-[#C8102E]" /> News & Notices
-          </h2>
-          <button className="text-[#111827] font-semibold hover:underline">View All</button>
+    <section className="section-pad" style={{ background: '#fff' }}>
+      <div className="container-narrow">
+        <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: '2.5rem', flexWrap: 'wrap', gap: '1rem' }}>
+          <div>
+            <div className="rule-accent" />
+            <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(1.6rem, 4vw, 2.2rem)', margin: 0, color: '#111' }}>
+              News & Notices
+            </h2>
+          </div>
+          <button style={{ fontFamily: 'var(--font-body)', fontSize: '0.85rem', fontWeight: 600, color: '#B91C1C', background: 'none', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px' }}>
+            View all <ArrowRight size={14} />
+          </button>
         </div>
 
-        {notices.length === 0 ? (
-          <div className="text-center py-12 text-gray-400 bg-gray-50 rounded-3xl border-2 border-dashed border-gray-200">
-            No active notices at this time.
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {notices.map((notice) => (
-              <div key={notice.id} className="card flex flex-col h-full border-l-4 border-l-[#C8102E]">
-                <div className="flex items-center gap-2 text-sm text-gray-500 mb-3">
-                  <Calendar size={14} />
-                  <span>{notice.date}</span>
-                  <span className="ml-auto px-2 py-1 bg-gray-100 rounded text-xs font-bold uppercase tracking-wider">
-                    Update
-                  </span>
-                </div>
-                <h3 className="text-xl font-bold mb-3 text-gray-800">{notice.title}</h3>
-                <p className="text-gray-600 line-clamp-3 mb-4 flex-grow">{notice.content}</p>
-                <button className="text-[#C8102E] font-medium flex items-center gap-1 hover:gap-2 transition-all">
-                  Read More <Info size={16} />
-                </button>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 280px), 1fr))', gap: '1.25rem' }}>
+          {notices.slice(0, 3).map((n, i) => (
+            <article key={n.id} className="card fade-up" style={{ animationDelay: `${i * 0.08}s`, borderLeft: '3px solid #B91C1C', borderRadius: '0.75rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#999', fontSize: '0.75rem', marginBottom: '0.75rem' }}>
+                <Calendar size={13} />
+                <span>{n.date}</span>
+                <span style={{ marginLeft: 'auto', background: '#FEE2E2', color: '#B91C1C', padding: '2px 8px', borderRadius: '2rem', fontWeight: 600, fontSize: '0.7rem', textTransform: 'uppercase' }}>
+                  Notice
+                </span>
               </div>
-            ))}
-          </div>
-        )}
+              <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '1.1rem', fontWeight: 700, margin: '0 0 0.5rem', color: '#111', lineHeight: 1.3 }}>
+                {n.title}
+              </h3>
+              <p style={{ fontSize: '0.875rem', color: '#666', margin: 0, lineHeight: 1.6, display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+                {n.content}
+              </p>
+            </article>
+          ))}
+        </div>
       </div>
     </section>
   );

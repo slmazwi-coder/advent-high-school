@@ -1,14 +1,17 @@
 import React from 'react';
-
-export const Sport = () => {
-  return (
-    <div className="py-16 bg-white">
-      <div className="max-w-5xl mx-auto px-4">
-        <h1 className="section-title">Sport</h1>
-        <div className="card">
-          <p className="text-gray-700">School sport information will be listed here.</p>
+export const Sport = () => (
+  <div>
+    <div className="page-header">
+      <div className="rule-accent" style={{ margin: '0 auto 0.75rem' }} />
+      <h1>Sport</h1>
+      <p>Athletic programmes at Advent Comprehensive High School</p>
+    </div>
+    <section className="section-pad" style={{ background: '#fff' }}>
+      <div className="container-narrow">
+        <div className="card" style={{ textAlign: 'center', padding: '3rem' }}>
+          <p style={{ color: '#888', fontSize: '0.95rem' }}>Sport programmes and schedules will be listed here.</p>
         </div>
       </div>
-    </div>
-  );
-};
+    </section>
+  </div>
+);

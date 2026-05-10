@@ -36,7 +36,9 @@ export const Footer = () => (
           {[
             { label: 'About Us', to: '/about' },
             { label: 'Admissions', to: '/admissions' },
+            { label: 'Applications', to: '/applications' },
             { label: 'Boarding', to: '/boarding' },
+            { label: 'Merchandise', to: '/merchandise' },
             { label: 'Contact', to: '/contact' },
             { label: 'Student Portal', to: '/student/login' },
             { label: 'Staff Portal', to: '/admin/login' },

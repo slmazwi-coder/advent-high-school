@@ -15,7 +15,9 @@ const NAV_LINKS = [
     { name: 'Activities', path: '/activities' },
   ]},
   { name: 'Admissions', path: '/admissions' },
+  { name: 'Applications', path: '/applications' },
   { name: 'Boarding', path: '/boarding' },
+  { name: 'Merchandise', path: '/merchandise' },
   { name: 'Contact', path: '/contact' },
 ];
 

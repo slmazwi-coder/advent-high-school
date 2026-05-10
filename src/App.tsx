@@ -17,6 +17,8 @@ import { Boarding } from './pages/Boarding';
 import { Contact } from './pages/Contact';
 import { StudentLogin } from './pages/StudentLogin';
 import { StudentPortal } from './pages/StudentPortal';
+
+// Admin imports
 import { AdminLogin } from './admin/AdminLogin';
 import { AdminLayout } from './admin/AdminLayout';
 import { AdminDashboard } from './admin/Dashboard';
@@ -29,6 +31,7 @@ import { ExtraCurricularEditor } from './admin/editors/ExtraCurricularEditor';
 import { ApplicationsEditor } from './admin/editors/ApplicationsEditor';
 import { ContactEditor } from './admin/editors/ContactEditor';
 import { StudentDocsEditor } from './admin/editors/StudentDocsEditor';
+import { MediaEditor } from './admin/editors/MediaEditor';
 
 const PublicPage = ({ children }: { children: React.ReactNode }) => (
   <>
@@ -50,6 +53,7 @@ export default function App() {
   return (
     <Router>
       <Routes>
+        {/* Public routes */}
         <Route path="/" element={<PublicPage><HomePage /></PublicPage>} />
         <Route path="/about" element={<PublicPage><About /></PublicPage>} />
         <Route path="/staff" element={<PublicPage><Staff /></PublicPage>} />
@@ -60,8 +64,12 @@ export default function App() {
         <Route path="/admissions" element={<PublicPage><Admissions /></PublicPage>} />
         <Route path="/boarding" element={<PublicPage><Boarding /></PublicPage>} />
         <Route path="/contact" element={<PublicPage><Contact /></PublicPage>} />
+
+        {/* Student portal */}
         <Route path="/student/login" element={<StudentLogin />} />
         <Route path="/student" element={<StudentPortal />} />
+
+        {/* Admin */}
         <Route path="/admin/login" element={<AdminLogin />} />
         <Route path="/admin" element={<ProtectedRoute><AdminLayout /></ProtectedRoute>}>
           <Route index element={<AdminDashboard />} />
@@ -73,8 +81,10 @@ export default function App() {
           <Route path="applications" element={<ApplicationsEditor />} />
           <Route path="student-documents" element={<StudentDocsEditor />} />
           <Route path="contact" element={<ContactEditor />} />
+          <Route path="media" element={<MediaEditor />} />
         </Route>
       </Routes>
+
       <ChatbotWidget />
     </Router>
   );

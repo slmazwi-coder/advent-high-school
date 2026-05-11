@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Newspaper, Info, Trophy, FileText, Activity, Users, Phone, Image, FolderUp } from 'lucide-react';
+import { Newspaper, Info, Trophy, FileText, Activity, Users, Phone, FolderUp } from 'lucide-react';
 
 const cards = [
   { path: '/admin/news', label: 'News & Notices', icon: Newspaper, desc: 'Add or remove school notices' },
@@ -11,7 +11,6 @@ const cards = [
   { path: '/admin/applications', label: 'Applications', icon: Users, desc: 'View learner applications' },
   { path: '/admin/student-documents', label: 'Student Docs', icon: FolderUp, desc: 'Upload student documents' },
   { path: '/admin/contact', label: 'Contact Info', icon: Phone, desc: 'Update contact details & hours' },
-  { path: '/admin/media', label: 'Logo & Images', icon: Image, desc: 'Upload hero photos & school logo' },
 ];
 
 export const AdminDashboard = () => (

@@ -31,7 +31,6 @@ import { ExtraCurricularEditor } from './admin/editors/ExtraCurricularEditor';
 import { ApplicationsEditor } from './admin/editors/ApplicationsEditor';
 import { ContactEditor } from './admin/editors/ContactEditor';
 import { StudentDocsEditor } from './admin/editors/StudentDocsEditor';
-import { MediaEditor } from './admin/editors/MediaEditor';
 
 const PublicPage = ({ children }: { children: React.ReactNode }) => (
   <>
@@ -81,7 +80,6 @@ export default function App() {
           <Route path="applications" element={<ApplicationsEditor />} />
           <Route path="student-documents" element={<StudentDocsEditor />} />
           <Route path="contact" element={<ContactEditor />} />
-          <Route path="media" element={<MediaEditor />} />
         </Route>
       </Routes>
 

@@ -10,7 +10,7 @@ export const Footer = () => (
         {/* Brand */}
         <div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1rem' }}>
-            <img src="/logo.svg" alt="ACHS" style={{ width: 40, height: 40, borderRadius: 8, border: '2px solid #B91C1C', background: '#fff' }} />
+            <img src="/logo.png" alt="ACHS" style={{ width: 40, height: 40, borderRadius: 8, border: '2px solid #B91C1C', background: '#fff' }} />
             <div>
               <div style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: '0.9rem', lineHeight: 1.2 }}>
                 Advent Comprehensive<br />High School

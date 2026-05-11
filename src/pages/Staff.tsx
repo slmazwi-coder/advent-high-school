@@ -54,7 +54,7 @@ const StaffCard = ({ member }: { member: StaffMember }) => {
             display: 'flex', alignItems: 'center', justifyContent: 'center',
           }}>
             <img
-              src="/logo.svg"
+              src="/logo.png"
               alt="Advent logo"
               style={{ width: '72%', height: '72%', objectFit: 'contain' }}
             />

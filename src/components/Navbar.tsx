@@ -57,7 +57,7 @@ export const Navbar = () => {
         {/* Logo + name */}
         <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', textDecoration: 'none', flex: 1 }}>
           <img
-            src="/logo.svg"
+            src="/logo.png"
             alt="Advent Comprehensive High School"
             style={{ width: 40, height: 40, borderRadius: 8, border: '2px solid #B91C1C', background: '#fff', flexShrink: 0 }}
           />

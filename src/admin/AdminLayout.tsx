@@ -4,7 +4,7 @@ import { logout } from './utils/storage';
 import {
   Newspaper, Info, Trophy, FileText, Activity, Users,
   Phone, LogOut, LayoutDashboard, ShieldCheck, ArrowLeft,
-  FolderUp, Image,
+  FolderUp,
 } from 'lucide-react';
 
 const adminTabs = [
@@ -17,7 +17,6 @@ const adminTabs = [
   { path: '/admin/applications', label: 'Applications', icon: Users },
   { path: '/admin/student-documents', label: 'Student Docs', icon: FolderUp },
   { path: '/admin/contact', label: 'Contact', icon: Phone },
-  { path: '/admin/media', label: 'Logo & Images', icon: Image },
 ];
 
 export const AdminLayout = () => {
@@ -26,15 +25,12 @@ export const AdminLayout = () => {
 
   return (
     <div style={{ minHeight: '100vh', background: '#0f0f0f', color: '#fff' }}>
-      {/* Top warning bar */}
       <div style={{ background: '#B91C1C', textAlign: 'center', padding: '5px', fontSize: '0.72rem', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase' }}>
         Admin Mode — Changes affect the live website
       </div>
 
-      {/* Nav bar */}
       <nav style={{ background: '#1a1a1a', borderBottom: '1px solid #2a2a2a', position: 'sticky', top: 0, zIndex: 50 }}>
         <div style={{ maxWidth: '72rem', margin: '0 auto', padding: '0 1rem', display: 'flex', alignItems: 'center', height: 52, gap: '1rem' }}>
-          {/* Back + title */}
           <button onClick={() => navigate('/')} style={{ background: 'none', border: 'none', color: '#aaa', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.3rem', fontSize: '0.8rem', flexShrink: 0 }}>
             <ArrowLeft size={14} /> Back
           </button>
@@ -44,16 +40,13 @@ export const AdminLayout = () => {
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', padding: '0.2rem 0.6rem', background: 'rgba(255,255,255,0.06)', borderRadius: '2rem', fontSize: '0.65rem', fontWeight: 700, color: '#4ade80', textTransform: 'uppercase', letterSpacing: '0.06em', flexShrink: 0 }}>
             <ShieldCheck size={11} /> Active
           </div>
-
           <div style={{ flex: 1 }} />
-
           <button onClick={() => { logout(); navigate('/admin/login'); }}
             style={{ background: 'none', border: 'none', color: '#888', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.35rem', fontSize: '0.8rem', flexShrink: 0 }}>
             <LogOut size={14} /> Logout
           </button>
         </div>
 
-        {/* Tab row — scrollable on small screens */}
         <div style={{ overflowX: 'auto', display: 'flex', gap: '0.15rem', padding: '0.35rem 1rem', maxWidth: '72rem', margin: '0 auto' }}>
           {adminTabs.map(tab => {
             const Icon = tab.icon;
@@ -75,7 +68,6 @@ export const AdminLayout = () => {
         </div>
       </nav>
 
-      {/* Page content */}
       <main style={{ maxWidth: '72rem', margin: '0 auto', padding: '2rem 1.25rem' }}>
         <Outlet />
       </main>

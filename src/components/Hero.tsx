@@ -121,7 +121,7 @@ export const Hero = () => {
       }}>
         {/* School crest */}
         <img
-          src="/logo.svg"
+          src="/logo.png"
           alt="Advent Comprehensive High School crest"
           style={{
             width: 68, height: 68,
